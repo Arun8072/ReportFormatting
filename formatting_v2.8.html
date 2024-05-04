@@ -143,12 +143,65 @@
 
 
         function wordExtend(inputText) {
-            // Implement wordExtend functionality
-        }
+    const replacements = {
+        'qty': 'quantity',
+        'ins': 'inspection',
+        'sp': 'scrap',
+        'ro': 'runout',
+        'rw': 'rework',
+        'pr': 'production',
+        'dt': 'details',
+        'fi': 'final',
+        'mc': 'machining',
+        'num': 'number'
+    };
+
+    // Create a regular expression pattern to match each key in replacements
+    const pattern = new RegExp('\\b(' + Object.keys(replacements).join('|') + ')\\b', 'gi');
+
+    // Replace each matched key with its corresponding value
+    const formattedText = inputText.replace(pattern, match => replacements[match.toLowerCase()]);
+
+    return formattedText;
+}
+
 
         function wordAttach(inputText) {
-            // Implement wordAttach functionality
+    const specifiedWords = ['production', 'inspection', 'runout', 'ok', 'rework', 'scrap'];
+
+    // Split the input text into an array of lines
+    const lines = inputText.split('\n');
+
+    // Iterate through each line
+    for (let i = 0; i < lines.length; i++) {
+        // Check if the line does not contain '*' and includes '-'
+        if (!lines[i].includes('*') && lines[i].includes('-')) {
+            // Iterate through each specified word
+            for (const word of specifiedWords) {
+                const regex = new RegExp(`\\b${word}\\b`, 'gi');
+
+                // Check if the word exists in the line, ignoring case
+                if (lines[i].match(regex)) {
+                    // Check if 'Total' is not already present before the word
+                    if (!lines[i].toLowerCase().includes('total')) {
+                        lines[i] = lines[i].replace(regex, 'Total $&');
+                    }
+
+                    // Check if 'quantity' is not already present after the word
+                    if (!lines[i].toLowerCase().includes('quantity')) {
+                        lines[i] = lines[i].replace(regex, '$& quantity');
+                    }
+                }
+            }
         }
+    }
+
+    // Join the lines back into a single string
+    const formattedText = lines.join('\n');
+    return formattedText;
+}
+
+
 
         function addStar(inputText) {
             // Implement addStar functionality
@@ -174,9 +227,9 @@
             // Integrate new formatting functions
             let formattedText ='';
             
-            formattedText += splitAlpha(inputText);
-            formattedText += wordExtend(formattedText);
-            formattedText += wordAttach(formattedText);
+            formattedText = splitAlpha(inputText);
+            formattedText = wordExtend(formattedText);
+            formattedText = wordAttach(formattedText);
             formattedText += addStar(formattedText);
             formattedText += wordSpacing(formattedText);
             formattedText += addBulletin(formattedText);
