@@ -107,9 +107,11 @@
         // Existing functions
         document.getElementById('formatButton').addEventListener('click', function() {
             const inputText = document.getElementById('inputText').value;
-            formatText(inputText);
-            analyzeText(inputText);
-        });
+            const formattedOutput = formatText(inputText);
+
+    analyzeText(formattedOutput);
+    
+});
 
         document.getElementById('copyButton').addEventListener('click', function() {
             const outputText = document.getElementById('outputText');
@@ -493,6 +495,7 @@
             formattedText = removeDuplicate(formattedText);
             
            document.getElementById('outputText').value = formattedText;
+           return formattedText;
         }
 
         function analyzeText(inputText) {
@@ -503,10 +506,10 @@
     output += '<br>' + "Rework analysis<br>" + analyzeComponent(inputText, 'rework');
 
     // Analyze comstar numbering details
-    output += '<br>' + analyzeComstarNumbering(inputText);
+    output += '<br>' +"Comstar numbering details : " +analyzeComstarNumbering(inputText);
 
     // Analyze inspection details
-    output += "\nInspection Analysis" + analyzeInspection(inputText);
+    output += '<br>'+"Inspection Analysis" + analyzeInspection(inputText);
 
     document.getElementById('validationResults').innerHTML = output;
     document.getElementById('popup').style.display = 'block';
@@ -646,12 +649,12 @@ function analyzeInspection(inputText) {
     if (startingNumber && endingNumber) {
         const difference = endingNumber - startingNumber;
         if (okQuantityMatch !== null && difference === okQuantityMatch) {
-            result += `<p>Comstar numbering details :<span class="success"> validation success</span> <br> Total Ok quantity: ${okQuantityMatch} ; Difference: ${difference}</p>\n<br>`;
+            result += `<p><span class="success"> validation success</span> <br> Total Ok quantity: ${okQuantityMatch} ; Difference: ${difference}</p>\n<br>`;
         } else {
-            result += `<p>Comstar numbering details :<span class="failure"> validation failed</span> <br> Total Ok quantity: ${okQuantityMatch} ; Difference: ${difference}</p>\n<br>`;
+            result += `<p><span class="failure"> validation failed</span> <br> Total Ok quantity: ${okQuantityMatch} ; Difference: ${difference}</p>\n<br>`;
         }
     } else {
-        result += `Comstar numbering details  - Starting or ending number not found\n<br>`;
+        result += `Starting or ending number not found\n<br>`;
     }
 
     return result;
