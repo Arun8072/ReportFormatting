@@ -10,6 +10,14 @@
         body {
            font-size: 14px; /* Decrease the font size */
         }
+#percentageSymbol {
+   margin-left: 5px;
+ position: absolute;
+            top: 8px;
+            right: 58px;
+            cursor: pointer;
+            /*Add space between "Copy" and the percentage symbol */
+}
 
         .copy-button {
             position: absolute;
@@ -87,7 +95,9 @@
         <div class="relative mt-8">
             <label for="outputText" class="block mb-2 font-medium">Formatted text:</label>
             <textarea id="outputText" class="w-full h-96 px-4 py-2 rounded-md border-gray-300 focus:outline-none focus:border-blue-500 relative" readonly></textarea>
-            <span id="copyButton" class="copy-button text-gray-600 cursor-pointer">Copy</span>
+            <span id="percentageSymbol">Add &#37;</span>
+
+<span id="copyButton" class="copy-button text-gray-600 cursor-pointer">Copy</span>
         </div>
     </div>
 
@@ -105,15 +115,28 @@
     <script>
 
         // Existing functions
-        document.getElementById('formatButton').addEventListener('click', function() {
+      document.getElementById('formatButton').addEventListener('click', function() {
             const inputText = document.getElementById('inputText').value;
-            //performe Text Formatting on Input text And Give Output 
+            //1. perform Text Formatting on Input text And Give Output 
             const formattedOutput = formatText(inputText);
-            // preform analysis On Formatted Text And Show On Popup 
+            //2. preform analysis On Formatted Text And Show On Popup 
     analyzeText(formattedOutput);
-    //Add Percentage To formatted Text After Analysis To Avoid Numberic Collision
-    extendedFeature(formattedOutput);
+    
+
+    document.getElementById('percentageSymbol').addEventListener('click', function() {
+           
+                //3. Add Percentage To formatted Text After Analysis To Avoid Numberic Collision
+    addPercentage(formattedOutput);
+
+            document.getElementById('percentageSymbol').innerText = 'Added %';
+            setTimeout(function() {
+                document.getElementById('percentageSymbol').innerText = 'Add %';
+            }, 2000); // Change back to 'Add' after 2 seconds
+        });
+
+    
 });
+
 
         document.getElementById('copyButton').addEventListener('click', function() {
             const outputText = document.getElementById('outputText');
@@ -124,6 +147,7 @@
                 document.getElementById('copyButton').innerText = 'Copy';
             }, 2000); // Change back to 'Copy' after 2 seconds
         });
+
 
 
         document.getElementById('closePopup').addEventListener('click', function() {
@@ -728,18 +752,16 @@
             return null;
         }
 
-        function extendedFeature(formattedText) {
+ /*       function extendedFeature(formattedText) {
     let output = ' ';
-
-
-    output = addPercentage(formattedText);
+        
 
  //   output = indentHyphen(formattedText);
 
 
     document.getElementById('outputText').value = output;
     
-}
+}  */
 
         function calcPercentage(x, y) {
   const percent = (x / y) * 100
@@ -747,6 +769,7 @@
 }
 
         function addPercentage(formattedText) {
+        
     // Split the formatted text into an array of lines
     const lines = formattedText.split('\n');
 
@@ -781,7 +804,12 @@
 
                 if (quantity !== null) {
                     const percentage = calcPercentage(quantity, total_inspection);
-                    lines[j] = lines[j].replace('-', `(${percentage}%) -`);
+                    //add percentage only if It Is Numberic Because if Inspection Is Zero Percentage Becomes Infinity
+                  if(isFinite(percentage)){
+                      
+                      lines[j] = lines[j].replace('-', `(${percentage}%) -`);
+                  }
+                    
                 }
             }
 
@@ -793,6 +821,7 @@
     // Join the lines back into a single string
     const result = lines.join('\n');
     
+document.getElementById('outputText').value = result;
     return result;
 }
 
