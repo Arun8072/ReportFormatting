@@ -125,6 +125,7 @@
             }, 2000); // Change back to 'Copy' after 2 seconds
         });
 
+
         document.getElementById('closePopup').addEventListener('click', function() {
             document.getElementById('popup').style.display = 'none';
         });
@@ -728,14 +729,15 @@
         }
 
         function extendedFeature(formattedText) {
-    let output = '';
-alert('extended');
-    // Analyze scrap and rework components
+    let output = ' ';
+
+
     output = addPercentage(formattedText);
-    output = indentHyphen(formattedText);
+
+ //   output = indentHyphen(formattedText);
 
 
-    document.getElementById('outputText').innerHTML = output;
+    document.getElementById('outputText').value = output;
     
 }
 
@@ -744,54 +746,57 @@ alert('extended');
   return percent.toFixed(2) ;
 }
 
-        function addPercentage(formattedOutput) {
-            alert('formattedOutput');
-    let result = '';
+        function addPercentage(formattedText) {
+    // Split the formatted text into an array of lines
+    const lines = formattedText.split('\n');
 
-    // Find all occurrences of "inspection"
-    const inspectionIndices = getAllIndices(formattedOutput.toLowerCase(), 'model');
+    // Iterate through every model
+    for (let i = 0; i < lines.length; i++) {
+        // Check if the line contains the word 'model'
+        if (lines[i].toLowerCase().includes('model')) {
+            // Find the start and end index of the model section
+            let startIdx = i;
+            let endIdx = i + 1;
+            while (endIdx < lines.length && !lines[endIdx].toLowerCase().includes('model')) {
+                endIdx++;
+            }
 
-    // Analyze inspection details
-    for (let i = 0; i < inspectionIndices.length; i++) {
-        const inspectionIndex = inspectionIndices[i];
-        const nextInspectionIndex = (i + 1 < inspectionIndices.length) ? inspectionIndices[i + 1] : formattedOutput.length;
-        const inspectionText = formattedOutput.substring(inspectionIndex, nextInspectionIndex);
+            // Calculate the total inspection quantity
+            let total_inspection = 0;
+            for (let j = startIdx; j < endIdx; j++) {
+                if (lines[j].toLowerCase().includes('total') && lines[j].toLowerCase().includes('inspection')) {
+                    total_inspection = getNumberFromLine(lines[j], 'total', 'inspection');
+                    break;
+                }
+            }
 
-        // Find the "Inspection details" section
-        const detailsIndex = inspectionText.toLowerCase().indexOf('model');
-        if (detailsIndex === -1) {
-            result += `Inspection ${i + 1}: Validation failed - Inspection details section not found.\n<br>`;
-            continue; // Skip this inspection if "Inspection details" section is not found
+            // Calculate and insert the percentage values
+            for (let j = startIdx; j < endIdx; j++) {
+                if (!lines[j].includes('-')) continue;
+
+                let quantity = getNumberFromLine(lines[j], 'total', 'ok');
+                if (quantity === null) quantity = getNumberFromLine(lines[j], 'total', 'runout');
+                if (quantity === null) quantity = getNumberFromLine(lines[j], 'total', 'scrap');
+                if (quantity === null) quantity = getNumberFromLine(lines[j], 'total', 'rework');
+
+                if (quantity !== null) {
+                    const percentage = calcPercentage(quantity, total_inspection);
+                    lines[j] = lines[j].replace('-', `(${percentage}%) -`);
+                }
+            }
+
+            // Update the model section in the lines array
+            i = endIdx - 1;
         }
+    }
 
-        // Find the  of "Inspection details" section
-        const detailsEndIndex = inspectionText.indexOf('\n\n', detailsIndex);
-        if (detailsEndIndex === -1) {
-            result += `Inspection ${i + 1}: Validation failed - End of inspection  section not found.\n<br>`;
-            continue; // Skip this inspection if end of "Inspection details" section is not found
-        }
-
-        // Extract and analyze inspection details
-        const inspectionDetails = inspectionText.substring(detailsIndex, detailsEndIndex);
-        
-        // Find total ok, total runout, total scrap, total rework, and total inspection values
-        const total_ok = getNumberFromLine(inspectionDetails, 'total', 'ok');
-        const total_runout = getNumberFromLine(inspectionDetails, 'total', 'runout');
-        const total_scrap = getNumberFromLine(inspectionDetails, 'total', 'scrap');
-        const total_rework = getNumberFromLine(inspectionDetails, 'total', 'rework');
-        const total_inspection = getNumberFromLine(inspectionDetails, 'total', 'inspection');
-
-        // Calculate the Percentage of total ok, total runout, total scrap, and total rework
-        const total_ok_perct = calcPercentage(total_ok,total_inspection);
-        const total_runout_percent = calcPercentage(total_runout,total_inspection);
-        const total_scrap_percent = calcPercentage(total_scrap,total_inspection);
-        const total_rework_percent = calcPercentage(total_rework,total_inspection);
-alert(total_scrap_percent);
-        
-    }//for
-
-    alert (result.trim());
+    // Join the lines back into a single string
+    const result = lines.join('\n');
+    
+    return result;
 }
+
+
 
  </script>
 </body>
