@@ -78,7 +78,7 @@
             <label for="inputText" class="block mb-2 font-medium">Paste your content:</label>
             <textarea id="inputText" class="w-full h-40 px-4 py-2 rounded-md border-gray-300 focus:outline-none focus:border-blue-500"></textarea>
         </div>
-        <button id="formatButton" class="mt-4 px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 focus:outline-none focus:bg-blue-600 animate-bounce">Format Text</button>
+        <button id="formatButton" class="mt-4 px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 focus:outline-none focus:bg-blue-600 ">Format Text</button>
         <div class="relative mt-8">
             <label for="outputText" class="block mb-2 font-medium">Formatted text:</label>
             <textarea id="outputText" class="w-full h-96 px-4 py-2 rounded-md border-gray-300 focus:outline-none focus:border-blue-500 relative" readonly></textarea>
@@ -354,7 +354,12 @@ function addNil(inputText) {
         // Check if the last character of the trimmed line is a hyphen
         if (trimmedLine.charAt(trimmedLine.length - 1) === '-') {
             // Add "Nil" to the end of the line
-            lines[i] = trimmedLine + " Nil";
+            lines[i] = trimmedLine + " NIL";
+        }
+        // Check if the line contains the word "nil"
+        if (trimmedLine.toLowerCase().includes('nil')) {
+            // Change the word "nil" to uppercase if it exists in the line
+            lines[i] = lines[i].replace(/\bnil\b/gi, 'NIL');
         }
     }
 
@@ -368,6 +373,24 @@ function addNil(inputText) {
     // Replace single digits with double digits using regular expression
     const formattedText = inputText.replace(/\b(\d)\b/g, '0$1');
 
+    return formattedText;
+}
+
+function removeIndent(inputText) {
+    // Split the input text into an array of lines
+    const lines = inputText.split('\n');
+
+    // Iterate through each line
+    for (let i = 0; i < lines.length; i++) {
+        // Check if the line does not contain a bulletin symbol
+        if (!lines[i].includes('•')) {
+            // Remove leading whitespace from the line
+            lines[i] = lines[i].trimLeft();
+        }
+    }
+
+    // Join the lines back into a single string
+    const formattedText = lines.join('\n');
     return formattedText;
 }
 
@@ -386,7 +409,8 @@ function addNil(inputText) {
             formattedText = addNos(formattedText);
             formattedText = addNil(formattedText);
             formattedText = doubleDigit(formattedText);
-
+            formattedText = removeIndent(formattedText);
+            
            document.getElementById('outputText').value = formattedText;
         }
 
