@@ -202,34 +202,6 @@
 }
 
 
-
-        function addStar(inputText) {
-    // Split the input text into an array of lines
-    const lines = inputText.split('\n');
-
-    // Iterate through each line
-    for (let i = 0; i < lines.length; i++) {
-        // Check if the line contains the words 'model' or 'details'
-        if (lines[i].toLowerCase().includes('model') || lines[i].toLowerCase().includes('details')) {
-            // Check if the line does not start with '*'
-            if (lines[i].trim().charAt(0) !== '*') {
-                // Add '*' symbol to the beginning of the line
-                lines[i] = '* ' + lines[i].trim();
-            }
-            // Check if the line does not end with '*'
-            if (lines[i].trim().slice(-1) !== '*') {
-                // Add '*' symbol to the end of the line
-                lines[i] = lines[i].trim() + ' *';
-            }
-        }
-    }
-
-    // Join the lines back into a single string
-    const formattedText = lines.join('\n');
-    return formattedText;
-}
-
-
         function addSpacing(inputText) {
     // Define special characters
     const specialCharacters = ['!', '"', '#', '$', '%', '&', "'", '(', ')', '*', '+', ',', '-', '.', '/', ':', ';', '<', '=', '>', '?', '@', '[', '\\', ']', '^', '_', '`', '{', '|', '}', '~'];
@@ -276,6 +248,15 @@
                 if (!lines[j].includes('•')) {
                     // Add the bullet symbol with 6-space indentation
                     lines[j] = '      • ' + lines[j].trim();
+                } else {
+                    // Check if bullet has 6 Whitespace before it and 1 whitespace after it
+                    const bulletIndex = lines[j].indexOf('•');
+                    const beforeBullet = lines[j].substring(0, bulletIndex);
+                    const afterBullet = lines[j].substring(bulletIndex + 1);
+                    if (beforeBullet.length !== 6 || afterBullet.trim().length !== 1) {
+                        // If not, adjust the bullet's indentation
+                        lines[j] = '      • ' + afterBullet.trim();
+                    }
                 }
                 j++;
             }
@@ -286,7 +267,6 @@
     const formattedText = lines.join('\n');
     return formattedText;
 }
-
 
 
         function lineCapitalize(inputText) {
@@ -342,7 +322,7 @@
 }
 
 
-function addNil(inputText) {
+        function addNil(inputText) {
     // Split the input text into an array of lines
     const lines = inputText.split('\n');
 
@@ -376,7 +356,7 @@ function addNil(inputText) {
     return formattedText;
 }
 
-function removeIndent(inputText) {
+        function removeIndent(inputText) {
     // Split the input text into an array of lines
     const lines = inputText.split('\n');
 
@@ -394,6 +374,34 @@ function removeIndent(inputText) {
     return formattedText;
 }
 
+        function addStar(inputText) {
+    // Split the input text into an array of lines
+    const lines = inputText.split('\n');
+
+    // Iterate through each line
+    for (let i = 0; i < lines.length; i++) {
+        // Check if the line contains the words 'model' or 'details'
+        if (lines[i].toLowerCase().includes('model') || lines[i].toLowerCase().includes('details')) {
+            // Check if the line does not start with '*'
+            if (lines[i].trim().charAt(0) !== '*') {
+                // Add '*' symbol to the beginning of the line
+                lines[i] = '* ' + lines[i].trim();
+            }
+            // Check if the line does not end with '*'
+            if (lines[i].trim().slice(-1) !== '*') {
+                // Add '*' symbol to the end of the line
+                lines[i] = lines[i].trim() + ' *';
+            }
+            // Remove whitespace around '*' if already present in the line
+            lines[i] = lines[i].replace(/\s*\*\s*/g, '*');
+        }
+    }
+
+    // Join the lines back into a single string
+    const formattedText = lines.join('\n');
+    return formattedText;
+}
+
 
         function formatText(inputText) {
             // Integrate new formatting functions
@@ -402,7 +410,6 @@ function removeIndent(inputText) {
             formattedText = splitAlpha(inputText);
             formattedText = wordExtend(formattedText);
             formattedText = wordAttach(formattedText);
-            formattedText = addStar(formattedText);
             formattedText = addSpacing(formattedText);
             formattedText = addBulletin(formattedText);
             formattedText = lineCapitalize(formattedText);
@@ -410,19 +417,78 @@ function removeIndent(inputText) {
             formattedText = addNil(formattedText);
             formattedText = doubleDigit(formattedText);
             formattedText = removeIndent(formattedText);
+            formattedText = addStar(formattedText);
             
            document.getElementById('outputText').value = formattedText;
         }
 
         function analyzeText(inputText) {
-            // Preserve existing validation functionality
-            let output = analyzeComponent(inputText, 'scrap');
-            output += '\n\n' + analyzeComponent(inputText, 'rework');
-            output += '\n\n' + analyzeComstarNumbering(inputText);
+    let output = '';
 
-            document.getElementById('validationResults').value = output;
-            document.getElementById('popup').style.display = 'block';
+    // Analyze scrap and rework components
+    output += analyzeComponent(inputText, 'scrap');
+    output += '\n\n' + analyzeComponent(inputText, 'rework');
+
+    // Analyze comstar numbering details
+    output += '\n\n' + analyzeComstarNumbering(inputText);
+
+    // Analyze inspection details
+    output += '\n\n' + analyzeInspection(inputText);
+
+    document.getElementById('validationResults').value = output;
+    document.getElementById('popup').style.display = 'block';
+}
+
+function analyzeInspection(inputText) {
+    let result = '';
+
+    // Find all occurrences of "inspection"
+    const inspectionIndices = getAllIndices(inputText.toLowerCase(), 'model');
+
+    // Analyze inspection details
+    for (let i = 0; i < inspectionIndices.length; i++) {
+        const inspectionIndex = inspectionIndices[i];
+        const nextInspectionIndex = (i + 1 < inspectionIndices.length) ? inspectionIndices[i + 1] : inputText.length;
+        const inspectionText = inputText.substring(inspectionIndex, nextInspectionIndex);
+
+        // Find the "Inspection details" section
+        const detailsIndex = inspectionText.toLowerCase().indexOf('model');
+        if (detailsIndex === -1) {
+            result += `Inspection ${i + 1}: Validation failed - Inspection details section not found.\n\n`;
+            continue; // Skip this inspection if "Inspection details" section is not found
         }
+
+        // Find the  of "Inspection details" section
+        const detailsEndIndex = inspectionText.indexOf('\n\n', detailsIndex);
+        if (detailsEndIndex === -1) {
+            result += `Inspection ${i + 1}: Validation failed - End of inspection  section not found.\n\n`;
+            continue; // Skip this inspection if end of "Inspection details" section is not found
+        }
+
+        // Extract and analyze inspection details
+        const inspectionDetails = inspectionText.substring(detailsIndex, detailsEndIndex);
+        
+        // Find total ok, total runout, total scrap, total rework, and total inspection values
+        const total_ok = getNumberFromLine(inspectionDetails, 'total', 'ok');
+        const total_runout = getNumberFromLine(inspectionDetails, 'total', 'runout');
+        const total_scrap = getNumberFromLine(inspectionDetails, 'total', 'scrap');
+        const total_rework = getNumberFromLine(inspectionDetails, 'total', 'rework');
+        const total_inspection = getNumberFromLine(inspectionDetails, 'total', 'inspection');
+
+        // Calculate the sum of total ok, total runout, total scrap, and total rework
+        const sum = total_ok + total_runout + total_scrap + total_rework;
+
+        // Check if the sum equals total inspection
+        if (sum === total_inspection) {
+            result += `Inspection ${i + 1}: Validation success \n Sum = ${sum}.\n total inspection = ${total_inspection}.\n\n`;
+        } else {
+            result += `Inspection ${i + 1}: Validation failed \n Sum = ${sum}.\n total inspection = ${total_inspection}.\n\n`;
+        }
+    }
+
+    return result.trim();
+}
+
 
         function analyzeComponent(inputText, component) {
             // Find all occurrences of "Model"
@@ -456,25 +522,25 @@ function removeIndent(inputText) {
                 }
 
                 if (!totalQty) {
-                    result += `Model ${i + 1}: No ${component}\n\n`;
+                    result += `${component} ${i + 1}: No ${component}\n\n`;
                     continue; // Skip this model if total quantity is not found
                 }
 
                 // Find the "{Component} details" section and extract quantities
                 const detailsIndex = modelText.toLowerCase().indexOf(`${component} details`);
                 if (detailsIndex === -1) {
-                    result += `Model ${i + 1}: Validation failed - ${component} details section not found.\n\n`;
+                    result += `${component} ${i + 1}: Validation failed - ${component} details section not found.\n\n`;
                     continue; // Skip this model if "{Component} details" section is not found
                 }
                 const detailsEndIndex = modelText.indexOf('\n\n', detailsIndex);
                 if (detailsEndIndex === -1) {
-                    result += `Model ${i + 1}: Validation failed - End of ${component} details section not found.\n\n`;
+                    result += `${component} ${i + 1}: Validation failed - End of ${component} details section not found.\n\n`;
                     continue; // Skip this model if end of "{Component} details" section is not found
                 }
                 const detailsSection = modelText.substring(detailsIndex, detailsEndIndex);
                 const qtyMatches = detailsSection.match(/- (\d+) nos/g);
                 if (!qtyMatches) {
-                    result += `Model ${i + 1}: Validation failed - No quantities found in ${component} details section.\n\n`;
+                    result += `${component} ${i + 1}: Validation failed - No quantities found in ${component} details section.\n\n`;
                     continue; // Skip this model if no quantities are found in "{Component} details" section
                 }
                 const foundQty = qtyMatches.reduce((sum, match) => {
@@ -484,9 +550,9 @@ function removeIndent(inputText) {
 
                 // Compare found quantity with expected quantity
                 if (foundQty === totalQty) {
-                    result += `Model ${i + 1}: Validation success\nTotal ${component} quantity - ${totalQty} (expected)\n${component} details - ${foundQty} (found)\n\n`;
+                    result += `${component} ${i + 1}: Validation success\nTotal ${component} quantity - ${totalQty} \n${component} details - ${foundQty} \n\n`;
                 } else {
-                    result += `Model ${i + 1}: Validation failed\nTotal ${component} quantity - ${totalQty} (expected)\n${component} details - ${foundQty} (found)\n\n`;
+                    result += `${component} ${i + 1}: Validation failed\nTotal ${component} quantity - ${totalQty} \n${component} details - ${foundQty} \n\n`;
                 }
             }
 
@@ -504,9 +570,9 @@ function removeIndent(inputText) {
     if (startingNumber && endingNumber) {
         const difference = endingNumber - startingNumber;
         if (okQuantityMatch !== null && difference === okQuantityMatch) {
-            result += `Comstar numbering details validation success\nDifference: ${difference}\nTotal Ok quantity: ${okQuantityMatch}\n\n`;
+            result += `Comstar numbering details : validation success\nDifference: ${difference}\nTotal Ok quantity: ${okQuantityMatch}\n\n`;
         } else {
-            result += `Comstar numbering details validation failed\nDifference: ${difference}\nTotal Ok quantity: ${okQuantityMatch}\n\n`;
+            result += `Comstar numbering details : validation failed\nDifference: ${difference}\nTotal Ok quantity: ${okQuantityMatch}\n\n`;
         }
     } else {
         result += `Comstar numbering details validation failed - Starting or ending number not found\n\n`;
