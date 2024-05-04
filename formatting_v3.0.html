@@ -204,24 +204,141 @@
 
 
         function addStar(inputText) {
-            // Implement addStar functionality
-        }
+    // Split the input text into an array of lines
+    const lines = inputText.split('\n');
 
-        function wordSpacing(inputText) {
-            // Implement wordSpacing functionality
+    // Iterate through each line
+    for (let i = 0; i < lines.length; i++) {
+        // Check if the line contains the words 'model' or 'details'
+        if (lines[i].toLowerCase().includes('model') || lines[i].toLowerCase().includes('details')) {
+            // Check if the line does not start with '*'
+            if (lines[i].trim().charAt(0) !== '*') {
+                // Add '*' symbol to the beginning of the line
+                lines[i] = '* ' + lines[i].trim();
+            }
+            // Check if the line does not end with '*'
+            if (lines[i].trim().slice(-1) !== '*') {
+                // Add '*' symbol to the end of the line
+                lines[i] = lines[i].trim() + ' *';
+            }
         }
+    }
+
+    // Join the lines back into a single string
+    const formattedText = lines.join('\n');
+    return formattedText;
+}
+
+
+        function addSpacing(inputText) {
+    // Define special characters
+    const specialCharacters = ['!', '"', '#', '$', '%', '&', "'", '(', ')', '*', '+', ',', '-', '.', '/', ':', ';', '<', '=', '>', '?', '@', '[', '\\', ']', '^', '_', '`', '{', '|', '}', '~'];
+
+    // Split the input text into an array of characters
+    const characters = inputText.split('');
+
+    // Iterate through each character starting from the second character
+    for (let i = 1; i < characters.length - 1; i++) {
+        const currentChar = characters[i];
+
+        // Check if the current character is a special character
+        if (specialCharacters.includes(currentChar)) {
+            const prevChar = characters[i - 1];
+            const nextChar = characters[i + 1];
+
+            // Check if either the previous or next character is not a whitespace
+            if (prevChar.trim() !== '' || nextChar.trim() !== '') {
+                // Insert a whitespace before and after the special character
+                characters[i] = ' ' + currentChar + ' ';
+            }
+        }
+    }
+
+    // Join the characters back into a single string
+    const formattedText = characters.join('');
+    return formattedText;
+}
+
 
         function addBulletin(inputText) {
-            // Implement addBulletin functionality
+    // Split the input text into an array of lines
+    const lines = inputText.split('\n');
+
+    // Iterate through each line
+    for (let i = 0; i < lines.length; i++) {
+        // Check if the line contains 'scrap details' or 'rework details' in any case
+        if (lines[i].toLowerCase().includes('scrap details') || lines[i].toLowerCase().includes('rework details')) {
+            // Start from the next line
+            let j = i + 1;
+            // Iterate through subsequent lines until an empty line is encountered or there is no alphabet character
+            while (j < lines.length && lines[j].trim() !== '' && /[a-zA-Z]/.test(lines[j])) {
+                // Check if there is no bullet symbol in the line
+                if (!lines[j].includes('•')) {
+                    // Add the bullet symbol with 6-space indentation
+                    lines[j] = '      • ' + lines[j].trim();
+                }
+                j++;
+            }
         }
+    }
+
+    // Join the lines back into a single string
+    const formattedText = lines.join('\n');
+    return formattedText;
+}
+
+
 
         function lineCapitalize(inputText) {
-            // Implement lineCapitalize functionality
-        }
+    // Split the input text into an array of lines
+    const lines = inputText.split('\n');
 
-        function addNosOrNil(inputText) {
-            // Implement addNosOrNil functionality
+    // Iterate through each line
+    for (let i = 0; i < lines.length; i++) {
+        // Trim the line to remove leading and trailing whitespaces
+        const trimmedLine = lines[i].trim();
+
+        // Check if the line is not empty
+        if (trimmedLine.length > 0) {
+            // Find the index of the first alphabet letter
+            const firstAlphabetIndex = trimmedLine.search(/[a-zA-Z]/);
+
+            // Check if the first alphabet letter is not already capitalized
+            if (firstAlphabetIndex !== -1 && trimmedLine[firstAlphabetIndex] === trimmedLine[firstAlphabetIndex].toLowerCase()) {
+                // Capitalize the first alphabet letter
+                lines[i] = lines[i].substring(0, firstAlphabetIndex) + trimmedLine[firstAlphabetIndex].toUpperCase() + trimmedLine.substring(firstAlphabetIndex + 1);
+            }
         }
+    }
+
+    // Join the lines back into a single string
+    const formattedText = lines.join('\n');
+    return formattedText;
+}
+
+
+
+
+        function addNos(inputText) {
+    // Split the input text into an array of lines
+    const lines = inputText.split('\n');
+
+    // Iterate through each line
+    for (let i = 0; i < lines.length; i++) {
+        // Check if the line contains 'total' or 'quantity' and does not contain 'nos' or 'nil'
+        if ((lines[i].toLowerCase().includes('total') || lines[i].toLowerCase().includes('quantity')) &&
+            !lines[i].toLowerCase().includes('nos') && !lines[i].toLowerCase().includes('nil')) {
+            // Add 'Nos' at the end of the line
+            lines[i] += ' Nos';
+        }
+    }
+
+    // Join the lines back into a single string
+    const formattedText = lines.join('\n');
+    return formattedText;
+}
+
+
 
         function formatText(inputText) {
             // Integrate new formatting functions
@@ -230,11 +347,11 @@
             formattedText = splitAlpha(inputText);
             formattedText = wordExtend(formattedText);
             formattedText = wordAttach(formattedText);
-            formattedText += addStar(formattedText);
-            formattedText += wordSpacing(formattedText);
-            formattedText += addBulletin(formattedText);
-            formattedText += lineCapitalize(formattedText);
-            formattedText += addNosOrNil(formattedText);
+            formattedText = addStar(formattedText);
+            formattedText = addSpacing(formattedText);
+            formattedText = addBulletin(formattedText);
+            formattedText = lineCapitalize(formattedText);
+            formattedText = addNos(formattedText);
 
            document.getElementById('outputText').value = formattedText;
         }
