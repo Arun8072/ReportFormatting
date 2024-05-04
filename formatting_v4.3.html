@@ -204,7 +204,7 @@
 
         function addSpacing(inputText) {
     // Define special characters
-    const specialCharacters = ['!', '"', '#', '$', '%', '&', "'", '(', ')', '*', '+', ',', '-', '.', '/', ':', ';', '<', '=', '>', '?', '@', '[', '\\', ']', '^', '_', '`', '{', '|', '}', '~'];
+    const specialCharacters = ['!', '"', '#', '$', '%', '&', "'", '(', ')', '+', ',', '-', '.', '/', ':', ';', '<', '=', '>', '?', '@', '[', '\\', ']', '^', '_', '`', '{', '|', '}', '~'];
 
     // Split the input text into an array of characters
     const characters = inputText.split('');
@@ -289,6 +289,39 @@
                 lines[i] = lines[i].substring(0, firstAlphabetIndex) + trimmedLine[firstAlphabetIndex].toUpperCase() + trimmedLine.substring(firstAlphabetIndex + 1);
             }
         }
+    }
+
+    // Join the lines back into a single string
+    const formattedText = lines.join('\n');
+    return formattedText;
+}
+
+        function alterCase(inputText) {
+    const keywords = [
+        'id', 'od', 'cnc', 'vmc', 'emf', 'bosch', 'comstar', 
+        'sona comstar', 'amphere', 'bgauss', 'mechilio', 
+        'lucas tvs', 'u546'
+    ];
+
+    // Split the input text into an array of lines
+    const lines = inputText.split('\n');
+
+    // Iterate through each line
+    for (let i = 0; i < lines.length; i++) {
+        // Split the line into an array of words
+        const words = lines[i].split(' ');
+
+        // Iterate through each word
+        for (let j = 0; j < words.length; j++) {
+            // Check if the word is in the list of keywords (case-insensitive)
+            if (keywords.includes(words[j].toLowerCase())) {
+                // Convert the word to uppercase
+                words[j] = words[j].toUpperCase();
+            }
+        }
+
+        // Join the words back into a line
+        lines[i] = words.join(' ');
     }
 
     // Join the lines back into a single string
@@ -385,14 +418,14 @@
             // Check if the line does not start with '*'
             if (lines[i].trim().charAt(0) !== '*') {
                 // Add '*' symbol to the beginning of the line
-                lines[i] = '* ' + lines[i].trim();
+                lines[i] = '*' + lines[i].trim();
             }
             // Check if the line does not end with '*'
             if (lines[i].trim().slice(-1) !== '*') {
                 // Add '*' symbol to the end of the line
-                lines[i] = lines[i].trim() + ' *';
+                lines[i] = lines[i].trim() + '*';
             }
-            // Remove whitespace around '*' if already present in the line
+                // Remove whitespace around '*' if already present in the line
             lines[i] = lines[i].replace(/\s*\*\s*/g, '*');
         }
     }
@@ -413,6 +446,7 @@
             formattedText = addSpacing(formattedText);
             formattedText = addBulletin(formattedText);
             formattedText = lineCapitalize(formattedText);
+            formattedText = alterCase(formattedText);
             formattedText = addNos(formattedText);
             formattedText = addNil(formattedText);
             formattedText = doubleDigit(formattedText);
