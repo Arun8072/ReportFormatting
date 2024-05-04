@@ -527,13 +527,13 @@
     output += '<br>' + analyzeComstarNumbering(inputText);
 
     // Analyze inspection details
-    output += '<br>' + analyzeInspection(inputText);
+    output += "\nInspection Analysis" + analyzeInspection(inputText);
 
     document.getElementById('validationResults').innerHTML = output;
     document.getElementById('popup').style.display = 'block';
 }
 
-        function analyzeInspection(inputText) {
+function analyzeInspection(inputText) {
     let result = '';
 
     // Find all occurrences of "inspection"
@@ -595,10 +595,10 @@
                 const modelIndex = modelIndices[i];
                 const nextModelIndex = (i + 1 < modelIndices.length) ? modelIndices[i + 1] : inputText.length;
                 const modelText = inputText.substring(modelIndex, nextModelIndex);
-
+ 
                 // Find the "Total {component} quantity" line
                 let totalQty;
-                let totalQtyLine = modelText.match(new RegExp(`total\\s*${component}\\s*quantity\\s*-\\s*(\\d+)`, 'i'));
+                let totalQtyLine = modelText.match(new RegExp(`total\\s${component}\\squantity\\s-\\s(\\d+)`, 'i'));
                 if (totalQtyLine) {
                     totalQty = parseInt(totalQtyLine[1]);
                 } else {
@@ -632,21 +632,24 @@
                     continue; // Skip this model if end of "{Component} details" section is not found
                 }
                 const detailsSection = modelText.substring(detailsIndex, detailsEndIndex);
-                const qtyMatches = detailsSection.match(/- (\d+) nos/g);
+                
+                const qtyMatches = detailsSection.match(/(\d+)/gm);
+
+                
                 if (!qtyMatches) {
                     result += `${component} ${i + 1}: Validation failed - No quantities found in ${component} details section.\n<br>`;
                     continue; // Skip this model if no quantities are found in "{Component} details" section
                 }
                 const foundQty = qtyMatches.reduce((sum, match) => {
-                    const qty = parseInt(match.match(/(\d+) nos/)[1]);
+                    const qty = parseInt(match.match(/(\d+)/)[1]);
                     return sum + qty;
                 }, 0);
 
                 // Compare found quantity with expected quantity
                 if (foundQty === totalQty) {
-                    result += `${component} ${i + 1}: Validation success<br>Total ${component} quantity - ${totalQty} <br>${component} details - ${foundQty} \n<br>`;
+                    result += `${component} ${i + 1}: <span class="success"> validation success</span><br>Total ${component} quantity - ${totalQty} <br>${component} details - ${foundQty} \n<br>`;
                 } else {
-                    result += `${component} ${i + 1}: Validation failed\nTotal ${component} quantity - ${totalQty} <br>${component} details - ${foundQty} \n<br>`;
+                    result += `${component} ${i + 1}: <span class="failure"> validation failed</span> <br>Total ${component} quantity - ${totalQty} <br>${component} details - ${foundQty} \n<br>`;
                 }
             }
 
@@ -664,12 +667,12 @@
     if (startingNumber && endingNumber) {
         const difference = endingNumber - startingNumber;
         if (okQuantityMatch !== null && difference === okQuantityMatch) {
-            result += `<p>Comstar numbering details :<span class="success"> validation success</span> <br> Total Ok quantity: ${okQuantityMatch} ; Difference: ${difference}</p><br>`;
+            result += `<p>Comstar numbering details :<span class="success"> validation success</span> <br> Total Ok quantity: ${okQuantityMatch} ; Difference: ${difference}</p>\n<br>`;
         } else {
-            result += `<p>Comstar numbering details :<span class="failure"> validation failed</span> <br> Total Ok quantity: ${okQuantityMatch} ; Difference: ${difference}</p><br>`;
+            result += `<p>Comstar numbering details :<span class="failure"> validation failed</span> <br> Total Ok quantity: ${okQuantityMatch} ; Difference: ${difference}</p>\n<br>`;
         }
     } else {
-        result += `Comstar numbering details validation failed - Starting or ending number not found\n<br>`;
+        result += `Comstar numbering details  - Starting or ending number not found\n<br>`;
     }
 
     return result;
