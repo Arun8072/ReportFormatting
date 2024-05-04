@@ -7,6 +7,10 @@
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
     <style>
         /* Custom styles */
+        body {
+           font-size: 14px; /* Decrease the font size */
+        }
+
         .copy-button {
             position: absolute;
             top: 8px;
@@ -72,8 +76,8 @@
     </style>
 </head>
 <body class="bg-gray-100">
-    <div class="container mx-auto p-8">
-        <h1 class="text-3xl font-bold mb-8">Text Formatting Tool</h1>
+    <div class="container mx-auto p-6">
+        <h3 class="text-2xl font-bold mb-6">Text Formatting Tool</h3>
         <div>
             <label for="inputText" class="block mb-2 font-medium">Paste your content:</label>
             <textarea id="inputText" class="w-full h-40 px-4 py-2 rounded-md border-gray-300 focus:outline-none focus:border-blue-500"></textarea>
@@ -90,7 +94,7 @@
     <div id="popup">
         <div id="popup-content" class="bg-white rounded-lg p-8">
             <h2 class="text-2xl font-bold mb-4">Formatted Text</h2>
-            <textarea id="validationResults" class="w-full h-80 px-4 py-2 rounded-md border-gray-300 focus:outline-none focus:border-blue-500" readonly></textarea>
+            <div id="validationResults" class="w-full h-80 px-4 py-2 rounded-md border-gray-300 focus:outline-none focus:border-blue-500" readonly></div>
             <button id="closePopup" class="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 focus:outline-none focus:bg-blue-600">Close</button>
         </div>
     </div>
@@ -231,6 +235,57 @@
     return formattedText;
 }
 
+        function lineCapitalize(inputText) {
+    // Split the input text into an array of lines
+    const lines = inputText.split('\n');
+
+    // Iterate through each line
+    for (let i = 0; i < lines.length; i++) {
+        // Trim the line to remove leading and trailing whitespaces
+        const trimmedLine = lines[i].trim();
+
+        // Check if the line is not empty
+        if (trimmedLine.length > 0) {
+            // Find the index of the first alphabet letter
+            const firstAlphabetIndex = trimmedLine.search(/[a-zA-Z]/);
+
+            // Check if the first alphabet letter is not already capitalized
+            if (firstAlphabetIndex !== -1 && trimmedLine[firstAlphabetIndex] === trimmedLine[firstAlphabetIndex].toLowerCase()) {
+                // Capitalize the first alphabet letter
+                lines[i] = lines[i].substring(0, firstAlphabetIndex) + trimmedLine[firstAlphabetIndex].toUpperCase() + trimmedLine.substring(firstAlphabetIndex + 1);
+            }
+        }
+    }
+
+    // Join the lines back into a single string
+    const formattedText = lines.join('\n');
+    return formattedText;
+}        function lineCapitalize(inputText) {
+    // Split the input text into an array of lines
+    const lines = inputText.split('\n');
+
+    // Iterate through each line
+    for (let i = 0; i < lines.length; i++) {
+        // Trim the line to remove leading and trailing whitespaces
+        const trimmedLine = lines[i].trim();
+
+        // Check if the line is not empty
+        if (trimmedLine.length > 0) {
+            // Find the index of the first alphabet letter
+            const firstAlphabetIndex = trimmedLine.search(/[a-zA-Z]/);
+
+            // Check if the first alphabet letter is not already capitalized
+            if (firstAlphabetIndex !== -1 && trimmedLine[firstAlphabetIndex] === trimmedLine[firstAlphabetIndex].toLowerCase()) {
+                // Capitalize the first alphabet letter
+                lines[i] = lines[i].substring(0, firstAlphabetIndex) + trimmedLine[firstAlphabetIndex].toUpperCase() + trimmedLine.substring(firstAlphabetIndex + 1);
+            }
+        }
+    }
+
+    // Join the lines back into a single string
+    const formattedText = lines.join('\n');
+    return formattedText;
+}
 
         function addBulletin(inputText) {
     // Split the input text into an array of lines
@@ -259,34 +314,6 @@
                     }
                 }
                 j++;
-            }
-        }
-    }
-
-    // Join the lines back into a single string
-    const formattedText = lines.join('\n');
-    return formattedText;
-}
-
-
-        function lineCapitalize(inputText) {
-    // Split the input text into an array of lines
-    const lines = inputText.split('\n');
-
-    // Iterate through each line
-    for (let i = 0; i < lines.length; i++) {
-        // Trim the line to remove leading and trailing whitespaces
-        const trimmedLine = lines[i].trim();
-
-        // Check if the line is not empty
-        if (trimmedLine.length > 0) {
-            // Find the index of the first alphabet letter
-            const firstAlphabetIndex = trimmedLine.search(/[a-zA-Z]/);
-
-            // Check if the first alphabet letter is not already capitalized
-            if (firstAlphabetIndex !== -1 && trimmedLine[firstAlphabetIndex] === trimmedLine[firstAlphabetIndex].toLowerCase()) {
-                // Capitalize the first alphabet letter
-                lines[i] = lines[i].substring(0, firstAlphabetIndex) + trimmedLine[firstAlphabetIndex].toUpperCase() + trimmedLine.substring(firstAlphabetIndex + 1);
             }
         }
     }
@@ -425,15 +452,44 @@
                 // Add '*' symbol to the end of the line
                 lines[i] = lines[i].trim() + '*';
             }
+
+        }
                 // Remove whitespace around '*' if already present in the line
             lines[i] = lines[i].replace(/\s*\*\s*/g, '*');
-        }
     }
 
     // Join the lines back into a single string
     const formattedText = lines.join('\n');
     return formattedText;
 }
+
+        function removeDuplicate(inputText) {
+    // Split the input text into an array of lines
+    const lines = inputText.split('\n');
+
+    // Iterate through each line
+    for (let i = 0; i < lines.length; i++) {
+        // Split the line into an array of words
+        const words = lines[i].split(' ');
+
+        // Iterate through each word
+        for (let j = 0; j < words.length - 1; j++) {
+            // Compare the current word with the next word
+            if (words[j].trim().toLowerCase() === words[j + 1].trim().toLowerCase()) {
+                // Remove the duplicate word
+                words.splice(j + 1, 1);
+            }
+        }
+
+        // Join the words back into a line
+        lines[i] = words.join(' ');
+    }
+
+    // Join the lines back into a single string
+    const formattedText = lines.join('\n');
+    return formattedText;
+}
+
 
 
         function formatText(inputText) {
@@ -444,14 +500,15 @@
             formattedText = wordExtend(formattedText);
             formattedText = wordAttach(formattedText);
             formattedText = addSpacing(formattedText);
-            formattedText = addBulletin(formattedText);
             formattedText = lineCapitalize(formattedText);
             formattedText = alterCase(formattedText);
             formattedText = addNos(formattedText);
             formattedText = addNil(formattedText);
             formattedText = doubleDigit(formattedText);
             formattedText = removeIndent(formattedText);
+            formattedText = addBulletin(formattedText);
             formattedText = addStar(formattedText);
+            formattedText = removeDuplicate(formattedText);
             
            document.getElementById('outputText').value = formattedText;
         }
@@ -469,7 +526,7 @@
     // Analyze inspection details
     output += '\n\n' + analyzeInspection(inputText);
 
-    document.getElementById('validationResults').value = output;
+    document.getElementById('validationResults').innerHTML = output;
     document.getElementById('popup').style.display = 'block';
 }
 
@@ -514,9 +571,9 @@ function analyzeInspection(inputText) {
 
         // Check if the sum equals total inspection
         if (sum === total_inspection) {
-            result += `Inspection ${i + 1}: Validation success \n Sum = ${sum}.\n total inspection = ${total_inspection}.\n\n`;
+            result += `<p>Inspection ${i + 1}: <span class="success">Validation success</span> <br> Total inspection = ${total_inspection} ; Sum = ${sum} <p>`;
         } else {
-            result += `Inspection ${i + 1}: Validation failed \n Sum = ${sum}.\n total inspection = ${total_inspection}.\n\n`;
+            result += `<p>Inspection ${i + 1}: <span class="failure">Validation failed</span> <br> Total inspection = ${total_inspection} ; Sum = ${sum} <p>`;
         }
     }
 
@@ -604,9 +661,9 @@ function analyzeInspection(inputText) {
     if (startingNumber && endingNumber) {
         const difference = endingNumber - startingNumber;
         if (okQuantityMatch !== null && difference === okQuantityMatch) {
-            result += `Comstar numbering details : validation success\nDifference: ${difference}\nTotal Ok quantity: ${okQuantityMatch}\n\n`;
+            result += `<p>Comstar numbering details :<span class="success"> validation success</span> <br> Total Ok quantity: ${okQuantityMatch} ; Difference: ${difference}</p>`;
         } else {
-            result += `Comstar numbering details : validation failed\nDifference: ${difference}\nTotal Ok quantity: ${okQuantityMatch}\n\n`;
+            result += `<p>Comstar numbering details :<span class="failure"> validation failed</span> <br> Total Ok quantity: ${okQuantityMatch} ; Difference: ${difference}</p>`;
         }
     } else {
         result += `Comstar numbering details validation failed - Starting or ending number not found\n\n`;
