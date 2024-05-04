@@ -474,6 +474,34 @@
     return formattedText;
 }
 
+        function shiftCapitalize(inputText) {
+    // Split the input text into an array of lines
+    const lines = inputText.split('\n');
+
+    // Iterate through each line
+    for (let i = 0; i < lines.length; i++) {
+        // Split the line into an array of words
+        const words = lines[i].split(' ');
+
+        // Iterate through each word
+        for (let j = 0; j < words.length; j++) {
+            // Check if the word is a single letter
+            if (words[j].length === 1 && /^[a-z]$/i.test(words[j])) {
+                // Check if the single letter is 'a', 'b', or 'c', and capitalize it
+                if (words[j].toLowerCase() === 'a' || words[j].toLowerCase() === 'b' || words[j].toLowerCase() === 'c') {
+                    words[j] = words[j].toUpperCase();
+                }
+            }
+        }
+
+        // Join the words back into a line
+        lines[i] = words.join(' ');
+    }
+
+    // Join the lines back into a single string
+    const formattedText = lines.join('\n');
+    return formattedText;
+}
 
 
         function formatText(inputText) {
@@ -486,6 +514,7 @@
             formattedText = addSpacing(formattedText);
             formattedText = lineCapitalize(formattedText);
             formattedText = alterCase(formattedText);
+            formattedText = shiftCapitalize(formattedText);
             formattedText = addNos(formattedText);
             formattedText = addNil(formattedText);
             formattedText = doubleDigit(formattedText);
@@ -493,7 +522,8 @@
             formattedText = addBulletin(formattedText);
             formattedText = addStar(formattedText);
             formattedText = removeDuplicate(formattedText);
-            
+
+
            document.getElementById('outputText').value = formattedText;
            return formattedText;
         }
