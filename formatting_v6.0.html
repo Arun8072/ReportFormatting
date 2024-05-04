@@ -187,10 +187,52 @@
         'dt': 'details',
         'fi': 'final',
         'mc': 'machining',
+        'md': 'model',
         'num': 'number',
-        'ov': 'ovality', 
-        'bl':  'bulge'
+        'rd': 'reducer',
+        'ovl': 'ovality', 
+        'bl':  'bulge',
+        'sn': 'starting number:',
+        'en': 'ending number:',
+        'thd': 'thin down',
+        'ig': 'Interference gap',
+        'chm': 'chattering mark',
+        'stm':'step mark',
+        'grm' : 'grinding mark',
+        'scm' : 'scoring mark',
+        'rdm':'reducer mark',
+        'pnm': 'punch mark',
+        'cast': 'casting defect',
+        'vhl': 'valve hole',
+        'bhl': 'bolt hole',
+        'dhl': 'dowel hole',
+        'us': 'undersize',
+        'os': 'oversize',
+        'al':'assembly less',
+        'am' : 'assembly more',
+        'tb':'Tap Bit Broken',
+        'db':'drill Bit Broken',
+        'unw':'unwash',
+        'dmg': 'damage',
+        'lm': 'line mark',
+        'tl': 'trim line',
+        'en': 'edge nipping',
+        'rm':'rim',
+        'rg':'ring',
+        'ck': 'crack',
+        'pno':'position not okay',
+        'flb': 'flange bend',
+        'rmb':'rim bend',
+        'odb':'od bend',
+        'wm': 'weld missing',
+        'ws': 'weld shift',
+        'wd': 'width',
+        'bc': 'batch code',
+        'tm': 'tap missing',
+        'dm': 'drill missing'
+        
     };
+
 
     // Create a regular expression pattern to match each key in replacements
     const pattern = new RegExp('\\b(' + Object.keys(replacements).join('|') + ')\\b', 'gi');
@@ -336,7 +378,7 @@
 
         function alterCase(inputText) {
     const keywords = [
-        'id', 'od', 'cnc', 'vmc', 'emf', 'bosch', 'comstar', 
+        'id', 'od', 'cnc', 'vmc','msd', 'emf', 'bosch', 'comstar', 
         'sona comstar', 'amphere', 'bgauss', 'mechilio', 
         'lucas tvs', 'u546'
     ];
