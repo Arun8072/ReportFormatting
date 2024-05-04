@@ -58,6 +58,16 @@
             border: 1px solid #ccc;
             border-radius: 4px;
             resize: none; /* Disable textarea resizing */
+            color: black; /* Default text color */
+        }
+
+        /* Color classes */
+        .success {
+            color: green;
+        }
+
+        .failure {
+            color: red;
         }
     </style>
 </head>
@@ -85,12 +95,15 @@
         </div>
     </div>
 
+
+
     <script>
 
+        // Existing functions
         document.getElementById('formatButton').addEventListener('click', function() {
             const inputText = document.getElementById('inputText').value;
-            const outputText = formatText(inputText);
-            document.getElementById('outputText').value = outputText;
+            formatText(inputText);
+            analyzeText(inputText);
         });
 
         document.getElementById('copyButton').addEventListener('click', function() {
@@ -107,20 +120,80 @@
             document.getElementById('popup').style.display = 'none';
         });
 
+        function getAllIndices(input, searchStr) {
+            const indices = [];
+            let index = input.toLowerCase().indexOf(searchStr.toLowerCase());
+            while (index !== -1) {
+                indices.push(index);
+                index = input.toLowerCase().indexOf(searchStr.toLowerCase(), index + 1);
+            }
+            return indices;
+        }
+
+        // New functions
+        function splitAlpha(inputText) {
+    // Regular expression to match a digit followed by an alphabet character
+    const regex = /(\d)([a-zA-Z])/g;
+
+    // Replace each occurrence of a digit followed by an alphabet character with digit + space + alphabet character
+    const formattedText = inputText.replace(regex, '$1 $2');
+
+    return formattedText;
+}
+
+
+        function wordExtend(inputText) {
+            // Implement wordExtend functionality
+        }
+
+        function wordAttach(inputText) {
+            // Implement wordAttach functionality
+        }
+
+        function addStar(inputText) {
+            // Implement addStar functionality
+        }
+
+        function wordSpacing(inputText) {
+            // Implement wordSpacing functionality
+        }
+
+        function addBulletin(inputText) {
+            // Implement addBulletin functionality
+        }
+
+        function lineCapitalize(inputText) {
+            // Implement lineCapitalize functionality
+        }
+
+        function addNosOrNil(inputText) {
+            // Implement addNosOrNil functionality
+        }
+
         function formatText(inputText) {
-            // Analyze scrap details for all models
-            let scrapResult = analyzeComponent(inputText, 'scrap');
-            // Analyze rework details for all models
-            let reworkResult = analyzeComponent(inputText, 'rework');
-            // Analyze Comstar numbering
-            let comstarNumberingResult = analyzeComstarNumbering(inputText);
+            // Integrate new formatting functions
+            let formattedText ='';
             
-            // Combine results
-            let output = scrapResult + '\n\n' + reworkResult + '\n\n' + comstarNumberingResult;
+            formattedText += splitAlpha(inputText);
+            formattedText += wordExtend(formattedText);
+            formattedText += wordAttach(formattedText);
+            formattedText += addStar(formattedText);
+            formattedText += wordSpacing(formattedText);
+            formattedText += addBulletin(formattedText);
+            formattedText += lineCapitalize(formattedText);
+            formattedText += addNosOrNil(formattedText);
+
+           document.getElementById('outputText').value = formattedText;
+        }
+
+        function analyzeText(inputText) {
+            // Preserve existing validation functionality
+            let output = analyzeComponent(inputText, 'scrap');
+            output += '\n\n' + analyzeComponent(inputText, 'rework');
+            output += '\n\n' + analyzeComstarNumbering(inputText);
 
             document.getElementById('validationResults').value = output;
             document.getElementById('popup').style.display = 'block';
-            return inputText;
         }
 
         function analyzeComponent(inputText, component) {
@@ -192,6 +265,7 @@
             return result.trim();
         }
 
+
         function analyzeComstarNumbering(inputText) {
     let result = '';
 
@@ -212,7 +286,6 @@
 
     return result;
 }
-
 
         function findOkQuantityUnderFinalComstar(inputText) {
             const lines = inputText.split('\n');
@@ -249,15 +322,6 @@
             return null;
         }
 
-        function getAllIndices(input, searchStr) {
-            const indices = [];
-            let index = input.toLowerCase().indexOf(searchStr.toLowerCase());
-            while (index !== -1) {
-                indices.push(index);
-                index = input.toLowerCase().indexOf(searchStr.toLowerCase(), index + 1);
-            }
-            return indices;
-        }
 
  </script>
 </body>
