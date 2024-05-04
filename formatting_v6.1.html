@@ -137,7 +137,7 @@
     
 });
 
-
+//copy Button
         document.getElementById('copyButton').addEventListener('click', function() {
             const outputText = document.getElementById('outputText');
             outputText.select();
@@ -149,10 +149,11 @@
         });
 
 
-
+//PopUp close Button
         document.getElementById('closePopup').addEventListener('click', function() {
             document.getElementById('popup').style.display = 'none';
         });
+        
 
         function getAllIndices(input, searchStr) {
             const indices = [];
@@ -339,43 +340,6 @@
     const formattedText = lines.join('\n');
     return formattedText;
 }
-
-        function addBulletin(inputText) {
-    // Split the input text into an array of lines
-    const lines = inputText.split('\n');
-
-    // Iterate through each line
-    for (let i = 0; i < lines.length; i++) {
-        // Check if the line contains 'scrap details' or 'rework details' in any case
-        if (lines[i].toLowerCase().includes('scrap details') || lines[i].toLowerCase().includes('rework details')) {
-            // Start from the next line
-            let j = i + 1;
-            // Iterate through subsequent lines until an empty line is encountered or there is no alphabet character
-            while (j < lines.length && lines[j].trim() !== '' && /[a-zA-Z]/.test(lines[j])) {
-                // Check if there is no bullet symbol in the line
-                if (!lines[j].includes('•')) {
-                    // Add the bullet symbol with 6-space indentation
-                    lines[j] = '      • ' + lines[j].trim();
-                } else {
-                    // Check if bullet has 6 Whitespace before it and 1 whitespace after it
-                    const bulletIndex = lines[j].indexOf('•');
-                    const beforeBullet = lines[j].substring(0, bulletIndex);
-                    const afterBullet = lines[j].substring(bulletIndex + 1);
-                    if (beforeBullet.length !== 6 || afterBullet.trim().length !== 1) {
-                        // If not, adjust the bullet's indentation
-                        lines[j] = '      • ' + afterBullet.trim();
-                    }
-                }
-                j++;
-            }
-        }
-    }
-
-    // Join the lines back into a single string
-    const formattedText = lines.join('\n');
-    return formattedText;
-}
-
         function alterCase(inputText) {
     const keywords = [
         'id', 'od', 'cnc', 'vmc','msd', 'emf', 'bosch', 'comstar', 
@@ -409,7 +373,34 @@
     return formattedText;
 }
 
+        function shiftCapitalize(inputText) {
+    // Split the input text into an array of lines
+    const lines = inputText.split('\n');
 
+    // Iterate through each line
+    for (let i = 0; i < lines.length; i++) {
+        // Split the line into an array of words
+        const words = lines[i].split(' ');
+
+        // Iterate through each word
+        for (let j = 0; j < words.length; j++) {
+            // Check if the word is a single letter
+            if (words[j].length === 1 && /^[a-z]$/i.test(words[j])) {
+                // Check if the single letter is 'a', 'b', or 'c', and capitalize it
+                if (words[j].toLowerCase() === 'a' || words[j].toLowerCase() === 'b' || words[j].toLowerCase() === 'c') {
+                    words[j] = words[j].toUpperCase();
+                }
+            }
+        }
+
+        // Join the words back into a line
+        lines[i] = words.join(' ');
+    }
+
+    // Join the lines back into a single string
+    const formattedText = lines.join('\n');
+    return formattedText;
+}
         function addNos(inputText) {
     // Split the input text into an array of lines
     const lines = inputText.split('\n');
@@ -486,6 +477,41 @@
     const formattedText = lines.join('\n');
     return formattedText;
 }
+        function addBulletin(inputText) {
+    // Split the input text into an array of lines
+    const lines = inputText.split('\n');
+
+    // Iterate through each line
+    for (let i = 0; i < lines.length; i++) {
+        // Check if the line contains 'scrap details' or 'rework details' in any case
+        if (lines[i].toLowerCase().includes('scrap details') || lines[i].toLowerCase().includes('rework details')) {
+            // Start from the next line
+            let j = i + 1;
+            // Iterate through subsequent lines until an empty line is encountered or there is no alphabet character
+            while (j < lines.length && lines[j].trim() !== '' && /[a-zA-Z]/.test(lines[j])) {
+                // Check if there is no bullet symbol in the line
+                if (!lines[j].includes('•')) {
+                    // Add the bullet symbol with 6-space indentation
+                    lines[j] = '      • ' + lines[j].trim();
+                } else {
+                    // Check if bullet has 6 Whitespace before it and 1 whitespace after it
+                    const bulletIndex = lines[j].indexOf('•');
+                    const beforeBullet = lines[j].substring(0, bulletIndex);
+                    const afterBullet = lines[j].substring(bulletIndex + 1);
+                    if (beforeBullet.length !== 6 || afterBullet.trim().length !== 1) {
+                        // If not, adjust the bullet's indentation
+                        lines[j] = '      • ' + afterBullet.trim();
+                    }
+                }
+                j++;
+            }
+        }
+    }
+
+    // Join the lines back into a single string
+    const formattedText = lines.join('\n');
+    return formattedText;
+}
 
         function addStar(inputText) {
     // Split the input text into an array of lines
@@ -543,34 +569,7 @@
     return formattedText;
 }
 
-        function shiftCapitalize(inputText) {
-    // Split the input text into an array of lines
-    const lines = inputText.split('\n');
 
-    // Iterate through each line
-    for (let i = 0; i < lines.length; i++) {
-        // Split the line into an array of words
-        const words = lines[i].split(' ');
-
-        // Iterate through each word
-        for (let j = 0; j < words.length; j++) {
-            // Check if the word is a single letter
-            if (words[j].length === 1 && /^[a-z]$/i.test(words[j])) {
-                // Check if the single letter is 'a', 'b', or 'c', and capitalize it
-                if (words[j].toLowerCase() === 'a' || words[j].toLowerCase() === 'b' || words[j].toLowerCase() === 'c') {
-                    words[j] = words[j].toUpperCase();
-                }
-            }
-        }
-
-        // Join the words back into a line
-        lines[i] = words.join(' ');
-    }
-
-    // Join the lines back into a single string
-    const formattedText = lines.join('\n');
-    return formattedText;
-}
 
 
         function formatText(inputText) {
