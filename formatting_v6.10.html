@@ -107,7 +107,7 @@
         <div>
             <label for="inputText" class="block mb-2 font-medium">Paste your content:</label>
             <textarea id="inputText" class="w-full h-40 px-4 py-2 rounded-md border-gray-300 focus:outline-none focus:border-blue-500">
-Dear sir ,
+`Dear sir`
 *Ev wheels production & inspection details*
 *Date :  |  |  *
 *Shift :  " "*
@@ -122,14 +122,10 @@ Total runout quantity   -
 Total scrap quantity   - 
 Total rework quantity   -
 
-
 scrap details
 
 
-
 rework details
-
-
 
 
 CNC model 02 -  
@@ -140,13 +136,10 @@ Total runout quantity   -
 Total scrap quantity   -
 Total rework quantity   -
 
-
 sp dt
 
 
-
 rw dt
-
 
 
 *02 . Drilling and tapping details*
@@ -163,20 +156,16 @@ Total scrap quantity -
 *03 . Final inspection details*
 
 Fi md 1 - Bosch
-inspection-1
+inspection-
 Ok-
 Runout-
 Scrap-
 rework-
 
-
 scrap details
 
 
-
 rework details
-
-
 
 
 Fi md 2- 
@@ -186,14 +175,10 @@ Runout-
 Scrap-
 rework-
 
-
-scrap  details
-
+scrap details
 
 
 rework details
-
-
 
 
 Fi md 3- comstar
@@ -203,15 +188,10 @@ Runout-
 Scrap-
 rework-
 
-
 sp dt
 
 
-
-
 rw dt
-
-
 
 
 *Comstar numbering details*
@@ -222,6 +202,7 @@ Next "  "  shift start from :
 
 
 </textarea>
+<!-- extra space between scrap and details make them unrecognisable -->
         </div>
         <button id="formatButton" class="mt-4 px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 focus:outline-none focus:bg-blue-600 ">Format Text</button>
         <div class="relative mt-8">
@@ -492,9 +473,8 @@ document.addEventListener("DOMContentLoaded", function() {
     return formattedText;
 }
         function alterCase(inputText) {
-        const keywords = [
-        'id', 'od', 'cnc', 'vmc','msd', 'emf', 'bosch','sona','comstar', 'amphere', 'bgauss', 'micelio', 
-        'lucas','tvs', 'u546'
+    const keywords = [
+        'id', 'od', 'cnc', 'vmc','msd', 'emf', 'bosch','sona','comstar', 'amphere', 'bgauss', 'micelio','machileo','lucas','tvs', 'u546'
     ];
 
     // Split the input text into an array of lines
@@ -884,14 +864,14 @@ function deleteEmpty(inputText) {
         // Find the "Inspection details" section
         const detailsIndex = inspectionText.toLowerCase().indexOf('model');
         if (detailsIndex === -1) {
-            result += `Inspection ${i + 1}: <p class="warning" >Validation failed - Inspection details section not found.\n</p><br>`;
+            result += `Inspection ${i + 1}: <span class="warning" >Validation failed - Insection details section not found.\n</span><br>`;
             continue; // Skip this inspection if "Inspection details" section is not found
         }
 
         // Find the  of "Inspection details" section
         const detailsEndIndex = inspectionText.indexOf('\n\n', detailsIndex);
         if (detailsEndIndex === -1) {
-            result += `Inspection ${i + 1}: <p class="warning" >Validation failed - End of inspection  section not found.\n</p><br>`;
+            result += `Inspection ${i + 1}: <span class="warning" >Validation failed - End of inspection  section not found.\n</span><br>`;
             continue; // Skip this inspection if end of "Inspection details" section is not found
         }
 
@@ -959,12 +939,12 @@ function deleteEmpty(inputText) {
                 // Find the "{Component} details" section and extract quantities
                 const detailsIndex = modelText.toLowerCase().indexOf(`${component} details`);
                 if (detailsIndex === -1) {
-                    result += `${component} ${i + 1}: <p class="warning" >Validation failed - ${component} details section not found.\n</p><br>`;
+                    result += `${component} ${i + 1}: <span class="warning" >Validation failed - ${component} details section not found.\n</span><br>`;
                     continue; // Skip this model if "{Component} details" section is not found
                 }
                 const detailsEndIndex = modelText.indexOf('\n\n', detailsIndex);
                 if (detailsEndIndex === -1) {
-                    result += `${component} ${i + 1}: <p class="warning" >Validation failed - End of ${component} details section not found.\n</p><br>`;
+                    result += `${component} ${i + 1}: <span class="warning" >Validation failed - End of ${component} details section not found.\n</span><br>`;
                     continue; // Skip this model if end of "{Component} details" section is not found
                 }
                 const detailsSection = modelText.substring(detailsIndex, detailsEndIndex);
@@ -973,7 +953,7 @@ function deleteEmpty(inputText) {
 
                 
                 if (!qtyMatches) {
-                    result += `${component} ${i + 1}: <p class="warning" >Validation failed - No quantities found in ${component} details section.\n</p><br>`;
+                    result += `${component} ${i + 1}: <span class="warning" >Validation failed - No quantities found in ${component} details section.\n</span><br>`;
                     continue; // Skip this model if no quantities are found in "{Component} details" section
                 }
                 const foundQty = qtyMatches.reduce((sum, match) => {
@@ -1049,16 +1029,6 @@ function deleteEmpty(inputText) {
             return null;
         }
 
- /*       function extendedFeature(formattedText) {
-    let output = ' ';
-        
-
- //   output = indentHyphen(formattedText);
-
-
-    document.getElementById('outputText').value = output;
-    
-}  */
 
         function calcPercentage(x, y) {
   const percent = (x / y) * 100
