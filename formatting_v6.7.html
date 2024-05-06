@@ -85,7 +85,17 @@
             color: red;
         }
         
-        
+        .fullscreen {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: 1000;
+    margin: 0;
+    resize: none;
+}
+
 
     </style>
 </head>
@@ -118,6 +128,16 @@
 
 
     <script>
+
+document.addEventListener("DOMContentLoaded", function() {
+    const inputText = document.getElementById("inputText");
+
+    inputText.addEventListener("dblclick", function() {
+        inputText.classList.toggle("fullscreen");
+    });
+});
+
+
 
         // Existing functions
       document.getElementById('formatButton').addEventListener('click', function() {
