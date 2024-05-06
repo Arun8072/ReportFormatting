@@ -1,0 +1,931 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Text Formatting Tool</title>
+<!--  <link href="tailwind.min.css" rel="stylesheet"> -->
+     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <style>
+        /* Custom styles */
+        body {
+           font-size: 14px; /* Decrease the font size */
+        }
+
+		#percentageSymbol {
+		   margin-left: 5px;
+		 position: absolute;
+		            top: 8px;
+		            right: 58px;
+		            cursor: pointer;
+		           
+		}
+
+        .copy-button {
+            position: absolute;
+            top: 8px;
+            right: 8px;
+            cursor: pointer;
+        }
+
+        /* Popup styles */
+        #popup {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 999;
+        }
+
+        #popup-content {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: white;
+            padding: 20px;
+            width: 90%;
+            max-width: 800px;
+            height: 90%; /* Further increased height */
+            max-height: 800px;
+            overflow-y: auto;
+            border-radius: 8px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        #closePopup {
+            align-self: flex-end;
+            margin-top: 10px;
+        }
+
+        #validationResults {
+            flex: 1;
+            margin-bottom: 10px;
+            width: 100%;
+            height: 90%; /* Further increased height */
+            font-size: 12px; /* Further decreased font size */
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            resize: none; /* Disable textarea resizing */
+            color: black; /* Default text color */
+                        overflow-y: auto;
+        }
+
+        /* Color classes */
+        .success {
+            color: green;
+        }
+
+        .failure {
+            color: red;
+        }
+        
+        
+
+    </style>
+</head>
+<body class="bg-gray-100">
+    <div class="container mx-auto p-6">
+        <h3 class="text-2xl font-bold mb-6">Text Formatting Tool</h3>
+        <div>
+            <label for="inputText" class="block mb-2 font-medium">Paste your content:</label>
+            <textarea id="inputText" class="w-full h-40 px-4 py-2 rounded-md border-gray-300 focus:outline-none focus:border-blue-500"></textarea>
+        </div>
+        <button id="formatButton" class="mt-4 px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 focus:outline-none focus:bg-blue-600 ">Format Text</button>
+        <div class="relative mt-8">
+            <label for="outputText" class="block mb-2 font-medium">Formatted text:</label>
+            <textarea id="outputText" class="w-full h-96 px-4 py-2 rounded-md border-gray-300 focus:outline-none focus:border-blue-500 relative" readonly></textarea>
+            <span id="percentageSymbol">Add &#37;</span>
+
+<span id="copyButton" class="copy-button text-gray-600 cursor-pointer">Copy</span>
+        </div>
+    </div>
+
+    <!-- Popup box -->
+    <div id="popup">
+        <div id="popup-content" class="bg-white rounded-lg p-8">
+            <h2 class="text-2xl font-bold mb-4">Formatted Text</h2>
+            <div id="validationResults" class="w-full h-80 px-4 py-2 rounded-md border-gray-300 focus:outline-none focus:border-blue-500" readonly></div>
+            <button id="closePopup" class="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 focus:outline-none focus:bg-blue-600">Close</button>
+        </div>
+    </div>
+
+
+
+    <script>
+
+        // Existing functions
+      document.getElementById('formatButton').addEventListener('click', function() {
+            const inputText = document.getElementById('inputText').value;
+            //1. perform Text Formatting on Input text And Give Output 
+            const formattedOutput = formatText(inputText);
+            //2. preform analysis On Formatted Text And Show On Popup 
+    analyzeText(formattedOutput);
+    
+
+    document.getElementById('percentageSymbol').addEventListener('click', function() {
+           
+                //3.get formatted Text as After Analysis to Add Percentage To Avoid Numberic Collision
+	    addPercentage(formattedOutput);
+
+	            document.getElementById('percentageSymbol').innerText = 'Added %';
+	            setTimeout(function() {
+	                document.getElementById('percentageSymbol').innerText = 'Add %';
+	            }, 2000); // Change back to 'Add' after 2 seconds
+	     });
+
+    
+	  });
+
+
+        document.getElementById('copyButton').addEventListener('click', function() {
+            const outputText = document.getElementById('outputText');
+            outputText.select();
+            document.execCommand('copy');
+            document.getElementById('copyButton').innerText = 'Copied';
+            setTimeout(function() {
+                document.getElementById('copyButton').innerText = 'Copy';
+            }, 2000); // Change back to 'Copy' after 2 seconds
+        });
+
+
+
+        document.getElementById('closePopup').addEventListener('click', function() {
+            document.getElementById('popup').style.display = 'none';
+        });
+
+        function getAllIndices(input, searchStr) {
+            const indices = [];
+            let index = input.toLowerCase().indexOf(searchStr.toLowerCase());
+            while (index !== -1) {
+                indices.push(index);
+                index = input.toLowerCase().indexOf(searchStr.toLowerCase(), index + 1);
+            }
+            return indices;
+        }
+
+        // New functions
+    function splitAlpha(inputText) {
+    // Regular expression to match a digit followed by an alphabet character
+     const regex = /(\d)([a-zA-Z])/g;
+
+    // Replace each occurrence of a digit followed by an alphabet character with digit + space + alphabet character
+   	 const formattedText = inputText.replace(regex, '$1 $2');
+
+   	 return formattedText;
+     }
+
+
+        function wordExtend(inputText) {
+const replacements = {
+        'qty': 'quantity',
+        'ins': 'inspection',
+        'sp': 'scrap',
+        'ro': 'runout',
+        'rw': 'rework',
+        'pr': 'production',
+        'dt': 'details',
+        'fi': 'final',
+        'mc': 'machining',
+        'md': 'model',
+        'num': 'number',
+        'rd': 'reducer',
+        'ovl': 'ovality', 
+        'bl':  'bulge',
+        'sn': 'starting number:',
+        'en': 'ending number:',
+        'thd': 'thin down',
+        'ig': 'Interference gap',
+        'chm': 'chattering mark',
+        'stm':'step mark',
+        'grm' : 'grinding mark',
+        'scm' : 'scoring mark',
+        'rdm':'reducer mark',
+        'pnm': 'punch mark',
+        'cast': 'casting defect',
+        'vhl': 'valve hole',
+        'bhl': 'bolt hole',
+        'dhl': 'dowel hole',
+        'us': 'undersize',
+        'os': 'oversize',
+        'al':'assembly less',
+        'am' : 'assembly more',
+        'tb':'Tap Bit Broken',
+        'db':'drill Bit Broken',
+        'unw':'unwash',
+        'dmg': 'damage',
+        'lm': 'line mark',
+        'tl': 'trim line',
+        'en': 'edge nipping',
+        'rm':'rim',
+        'rg':'ring',
+        'ck': 'crack',
+        'pno':'position not okay',
+        'flb': 'flange bend',
+        'rmb':'rim bend',
+        'odb':'od bend',
+        'wm': 'weld missing',
+        'ws': 'weld shift',
+        'wd': 'width',
+        'bc': 'batch code',
+        'tm': 'tap missing',
+        'dm': 'drill missing'
+        
+    };
+
+
+    // Create a regular expression pattern to match each key in replacements
+    const pattern = new RegExp('\\b(' + Object.keys(replacements).join('|') + ')\\b', 'gi');
+
+    // Replace each matched key with its corresponding value
+    const formattedText = inputText.replace(pattern, match => replacements[match.toLowerCase()]);
+
+    return formattedText;
+}
+
+
+        function wordAttach(inputText) {
+    const specifiedWords = ['production', 'inspection', 'runout', 'ok', 'rework', 'scrap'];
+
+    // Split the input text into an array of lines
+    const lines = inputText.split('\n');
+
+    // Iterate through each line
+    for (let i = 0; i < lines.length; i++) {
+        // Check if the line does not contain '*' and includes '-'
+        if (!lines[i].includes('*') && lines[i].includes('-')) {
+            // Iterate through each specified word
+            for (const word of specifiedWords) {
+                const regex = new RegExp(`\\b${word}\\b`, 'gi');
+
+                // Check if the word exists in the line, ignoring case
+                if (lines[i].match(regex)) {
+                    // Check if 'Total' is not already present before the word
+                    if (!lines[i].toLowerCase().includes('total')) {
+                        lines[i] = lines[i].replace(regex, 'Total $&');
+                    }
+
+                    // Check if 'quantity' is not already present after the word
+                    if (!lines[i].toLowerCase().includes('quantity')) {
+                        lines[i] = lines[i].replace(regex, '$& quantity');
+                    }
+                }
+            }
+        }
+    }
+
+    // Join the lines back into a single string
+    const formattedText = lines.join('\n');
+    return formattedText;
+}
+
+
+        function addSpacing(inputText) {
+    // Define special characters
+    const specialCharacters = ['!','*','"', '#', '$', '%', '&', "'", '(', ')', '+', ',', '-', '.', '/', ':', ';', '<', '=', '>', '?', '@', '[', '\\', ']', '^', '_', '`', '{', '|', '}', '~'];
+
+    // Split the input text into an array of characters
+    const characters = inputText.split('');
+
+    // Iterate through each character starting from the second character
+    for (let i = 1; i < characters.length - 1; i++) {
+        const currentChar = characters[i];
+
+        // Check if the current character is a special character
+        if (specialCharacters.includes(currentChar)) {
+            const prevChar = characters[i - 1];
+            const nextChar = characters[i + 1];
+
+            // Check if either the previous or next character is not a whitespace
+            if (prevChar.trim() !== '' || nextChar.trim() !== '') {
+                // Insert a whitespace before and after the special character
+                characters[i] = ' ' + currentChar + ' ';
+            }
+        }
+    }
+
+    // Join the characters back into a single string
+    const formattedText = characters.join('');
+    return formattedText;
+}
+
+        function lineCapitalize(inputText) {
+    // Split the input text into an array of lines
+    const lines = inputText.split('\n');
+
+    // Iterate through each line
+    for (let i = 0; i < lines.length; i++) {
+        // Trim the line to remove leading and trailing whitespaces
+        const trimmedLine = lines[i].trim();
+
+        // Check if the line is not empty
+        if (trimmedLine.length > 0) {
+            // Find the index of the first alphabet letter
+            const firstAlphabetIndex = trimmedLine.search(/[a-zA-Z]/);
+
+            // Check if the first alphabet letter is not already capitalized
+            if (firstAlphabetIndex !== -1 ) {
+                // Capitalize the first alphabet letter
+                const firstLetter = trimmedLine[firstAlphabetIndex].toUpperCase();
+                // Make the remaining letters lowercase
+                const remainingLetters = trimmedLine.substring(firstAlphabetIndex + 1).toLowerCase();
+                // Combine the first letter and remaining letters
+                lines[i] = trimmedLine.substring(0, firstAlphabetIndex) + firstLetter + remainingLetters;
+            }
+        }
+    }
+
+    // Join the lines back into a single string
+    const formattedText = lines.join('\n');
+    return formattedText;
+}
+        function alterCase(inputText) {
+    const keywords = [
+        'id', 'od', 'cnc', 'vmc','msd', 'emf', 'bosch','sona','comstar', 'amphere', 'bgauss', 'machelio', 
+        'lucas','tvs', 'u546'
+    ];
+
+    // Split the input text into an array of lines
+    const lines = inputText.split('\n');
+
+    // Iterate through each line
+    for (let i = 0; i < lines.length; i++) {
+        // Split the line into an array of words
+        const words = lines[i].split(' ');
+
+        // Iterate through each word
+        for (let j = 0; j < words.length; j++) {
+            // Check if the word is in the list of keywords (case-insensitive)
+            if (keywords.includes(words[j].toLowerCase())) {
+                // Convert the word to uppercase
+                words[j] = words[j].toUpperCase();
+            }
+        }
+
+        // Join the words back into a line
+        lines[i] = words.join(' ');
+    }
+
+    // Join the lines back into a single string
+    const formattedText = lines.join('\n');
+    return formattedText;
+}
+
+        function shiftCapitalize(inputText) {
+    // Split the input text into an array of lines
+    const lines = inputText.split('\n');
+
+    // Iterate through each line
+    for (let i = 0; i < lines.length; i++) {
+        // Split the line into an array of words
+        const words = lines[i].split(' ');
+
+        // Iterate through each word
+        for (let j = 0; j < words.length; j++) {
+            // Check if the word is a single letter
+            if (words[j].length === 1 && /^[a-z]$/i.test(words[j])) {
+                // Check if the single letter is 'a', 'b', or 'c', and capitalize it
+                if (words[j].toLowerCase() === 'a' || words[j].toLowerCase() === 'b' || words[j].toLowerCase() === 'c') {
+                    words[j] = words[j].toUpperCase();
+                }
+            }
+        }
+
+        // Join the words back into a line
+        lines[i] = words.join(' ');
+    }
+
+    // Join the lines back into a single string
+    const formattedText = lines.join('\n');
+    return formattedText;
+}
+        function addNos(inputText) {
+    // Split the input text into an array of lines
+    const lines = inputText.split('\n');
+
+    // Iterate through every line
+    for (let i = 0; i < lines.length; i++) {
+        // Check if the line contains the word 'total' or 'quantity'
+        if (lines[i].toLowerCase().includes('total') || lines[i].toLowerCase().includes('quantity')) {
+            // Check if the line contains a number
+            if (/\d/.test(lines[i])) {
+                // Check if the line does not contain 'nos' or 'nil' at the end
+                if (!/\bnos\b/i.test(lines[i]) && !/\bnil\b/i.test(lines[i])) {
+                    // Add "Nos" at the end of the line
+                    lines[i] += " nos";
+                }
+            }
+        }
+    }
+
+    // Join the lines back into a single string
+    const formattedText = lines.join('\n');
+    return formattedText;
+}
+
+
+        function addNil(inputText) {
+    // Split the input text into an array of lines
+    const lines = inputText.split('\n');
+
+    // Iterate through each line
+    for (let i = 0; i < lines.length; i++) {
+        // Trim the line to remove leading and trailing whitespaces
+        const trimmedLine = lines[i].trim();
+
+        // Check if the last character of the trimmed line is a hyphen
+        if (trimmedLine.charAt(trimmedLine.length - 1) === '-') {
+            // Add "Nil" to the end of the line
+            lines[i] = trimmedLine + " NIL";
+        }
+        // Check if the line contains the word "nil"
+        if (trimmedLine.toLowerCase().includes('nil')) {
+            // Change the word "nil" to uppercase if it exists in the line
+            lines[i] = lines[i].replace(/\bnil\b/gi, 'NIL');
+        }
+    }
+
+    // Join the lines back into a single string
+    const formattedText = lines.join('\n');
+    return formattedText;
+}
+
+
+        function doubleDigit(inputText) {
+    // Replace single digits with double digits using regular expression
+    const formattedText = inputText.replace(/\b(\d)\b/g, '0$1');
+
+    return formattedText;
+}
+
+        function removeIndent(inputText) {
+    // Split the input text into an array of lines
+    const lines = inputText.split('\n');
+
+    // Iterate through each line
+    for (let i = 0; i < lines.length; i++) {
+        // Check if the line does not contain a bulletin symbol
+        if (!lines[i].includes('•')) {
+            // Remove leading whitespace from the line
+            lines[i] = lines[i].trimLeft();
+        }
+    }
+
+    // Join the lines back into a single string
+    const formattedText = lines.join('\n');
+    return formattedText;
+}
+        function addBulletin(inputText) {
+    // Split the input text into an array of lines
+    const lines = inputText.split('\n');
+
+    // Iterate through each line
+    for (let i = 0; i < lines.length; i++) {
+        // Check if the line contains 'scrap details' or 'rework details' in any case
+        if (lines[i].toLowerCase().includes('scrap details') || lines[i].toLowerCase().includes('rework details')) {
+            // Start from the next line
+            let j = i + 1;
+            // Iterate through subsequent lines until an empty line is encountered or there is no alphabet character
+            while (j < lines.length && lines[j].trim() !== '' && /[a-zA-Z]/.test(lines[j])) {
+                // Check if there is no bullet symbol in the line
+                if (!lines[j].includes('•')) {
+                    // Add the bullet symbol with 6-space indentation
+                    lines[j] = '      • ' + lines[j].trim();
+                } else {
+                    // Check if bullet has 6 Whitespace before it and 1 whitespace after it
+                    const bulletIndex = lines[j].indexOf('•');
+                    const beforeBullet = lines[j].substring(0, bulletIndex);
+                    const afterBullet = lines[j].substring(bulletIndex + 1);
+                    if (beforeBullet.length !== 6 || afterBullet.trim().length !== 1) {
+                        // If not, adjust the bullet's indentation
+                        lines[j] = '      • ' + afterBullet.trim();
+                    }
+                }
+                j++;
+            }
+        }
+    }
+
+    // Join the lines back into a single string
+    const formattedText = lines.join('\n');
+    return formattedText;
+}
+
+        function addStar(inputText) {
+    // Split the input text into an array of lines
+    const lines = inputText.split('\n');
+
+    // Iterate through each line
+    for (let i = 0; i < lines.length; i++) {
+        // Check if the line contains the words 'model' or 'details'
+        if (lines[i].toLowerCase().includes('model') || lines[i].toLowerCase().includes('details')) {
+            // Check if the line does not start with '*'
+            if (lines[i].trim().charAt(0) !== '*') {
+                // Add '*' symbol to the beginning of the line
+                lines[i] = '*' + lines[i].trim();
+            }
+            // Check if the line does not end with '*'
+            if (lines[i].trim().slice(-1) !== '*') {
+                // Add '*' symbol to the end of the line
+                lines[i] = lines[i].trim() + '*';
+            }
+
+        }
+                // Remove whitespace around '*' if already present in the line
+            lines[i] = lines[i].replace(/\s*\*\s*/g, '*');
+    }
+
+    // Join the lines back into a single string
+    const formattedText = lines.join('\n');
+    return formattedText;
+}
+
+        function removeDuplicate(inputText) {
+    // Split the input text into an array of lines
+    const lines = inputText.split('\n');
+
+    // Iterate through each line
+    for (let i = 0; i < lines.length; i++) {
+        // Split the line into an array of words
+        const words = lines[i].split(' ');
+
+        // Iterate through each word
+        for (let j = 0; j < words.length - 1; j++) {
+            // Compare the current word with the next word
+            if (words[j].trim().toLowerCase() === words[j + 1].trim().toLowerCase()) {
+                // Remove the duplicate word
+                words.splice(j + 1, 1);
+            }
+        }
+
+        // Join the words back into a line
+        lines[i] = words.join(' ');
+    }
+
+    // Join the lines back into a single string
+    const formattedText = lines.join('\n');
+    return formattedText;
+}
+
+		function getNumber(input){
+         	 var numberMatch = input.match(/(\d+)/);                         		                         
+            if (numberMatch) {
+            	return parseInt(numberMatch[0]);				                    			                            
+            }else { return 0 ; }
+     	}
+
+        function sorting(inputText) {
+  		
+                    // Look for the line containing "total {component} quantity" or "{component} details"
+                   
+                    const lines = inputText.split('\n');
+                    let  swapped = [];
+                    var found = false;
+
+                   //finding the starting index and ending index of the section to sort in an array
+                    for (let i = 0; i < lines.length; i++) {
+
+                    	//sorting occurs for scrap and rework
+                        if ( (lines[i].toLowerCase().includes('scrap') || lines[i].toLowerCase().includes('rework') ) && lines[i].toLowerCase().includes('details')) {
+                           var startIndex=i;                         
+                           var endIndex=lines.indexOf('',startIndex);                          
+                            found = true; //to make sort occurs only within the section 
+                        }
+
+                        //sorting  in ascending order                      
+                         if (found===true && startIndex<i && i<endIndex &&  !lines[i]=='' &&  !lines[i+1]=='' ){               
+                         	
+                         	if (getNumber(lines[i])>getNumber(lines[i+1])){                                            	 
+                           	var temp = lines[i];
+                           	lines[i] = lines[i+1];
+                           	lines[i+1] = temp;                           
+                           	swapped.push(1); //to know swap occurs
+                           }
+     		 	  		 	
+                         } 
+                         
+
+                         // if swapped occurs there is 1 in swapped array so until (array full of 0) swapping doesnt occurs do sorting
+                         // if swapped array includes 1 move the pointer to starting line of the section to re do sort
+                         if (endIndex<=i){
+                         	found =false;                        
+                         	 if (swapped.includes(1) ){                         	 	
+                         	  i=startIndex-1 ;
+                         	 	swapped=[];                     
+                         	 }
+                         }				
+
+                    }//for
+ 
+               
+
+                    // Join the lines back into a single string
+                    const formattedText = lines.join('\n');
+                    return formattedText;
+        }
+
+
+        function formatText(inputText) {
+            // Integrate new formatting functions
+            let formattedText ='';
+            
+            formattedText = splitAlpha(inputText);
+            formattedText = wordExtend(formattedText);
+            formattedText = wordAttach(formattedText);
+            formattedText = addSpacing(formattedText);
+            formattedText = lineCapitalize(formattedText);
+            formattedText = alterCase(formattedText);
+            formattedText = shiftCapitalize(formattedText);
+            formattedText = addNos(formattedText);
+            formattedText = addNil(formattedText);
+            formattedText = doubleDigit(formattedText);
+            formattedText = removeIndent(formattedText);
+            formattedText = addBulletin(formattedText);
+            formattedText = addStar(formattedText);
+            formattedText = removeDuplicate(formattedText);
+            formattedText = sorting(formattedText); 
+
+           document.getElementById('outputText').value = formattedText;
+           return formattedText;
+        }
+
+        function analyzeText(inputText) {
+    let output = '';
+
+    // Analyze scrap and rework components
+    output += "Scrap analysis<br>" + analyzeComponent(inputText, 'scrap');
+    output += '<br>' + "Rework analysis<br>" + analyzeComponent(inputText, 'rework');
+
+    // Analyze comstar numbering details
+    output += '<br>' +"Comstar numbering details : " +analyzeComstarNumbering(inputText);
+
+    // Analyze inspection details
+    output += '<br>'+"Inspection Analysis" + analyzeInspection(inputText);
+
+    document.getElementById('validationResults').innerHTML = output;
+    document.getElementById('popup').style.display = 'block';
+}
+
+        function analyzeInspection(inputText) {
+    let result = '';
+
+    // Find all occurrences of "inspection"
+    const inspectionIndices = getAllIndices(inputText.toLowerCase(), 'model');
+
+    // Analyze inspection details
+    for (let i = 0; i < inspectionIndices.length; i++) {
+        const inspectionIndex = inspectionIndices[i];
+        const nextInspectionIndex = (i + 1 < inspectionIndices.length) ? inspectionIndices[i + 1] : inputText.length;
+        const inspectionText = inputText.substring(inspectionIndex, nextInspectionIndex);
+
+        // Find the "Inspection details" section
+        const detailsIndex = inspectionText.toLowerCase().indexOf('model');
+        if (detailsIndex === -1) {
+            result += `Inspection ${i + 1}: Validation failed - Inspection details section not found.\n<br>`;
+            continue; // Skip this inspection if "Inspection details" section is not found
+        }
+
+        // Find the  of "Inspection details" section
+        const detailsEndIndex = inspectionText.indexOf('\n\n', detailsIndex);
+        if (detailsEndIndex === -1) {
+            result += `Inspection ${i + 1}: Validation failed - End of inspection  section not found.\n<br>`;
+            continue; // Skip this inspection if end of "Inspection details" section is not found
+        }
+
+        // Extract and analyze inspection details
+        const inspectionDetails = inspectionText.substring(detailsIndex, detailsEndIndex);
+        
+        // Find total ok, total runout, total scrap, total rework, and total inspection values
+        const total_ok = getNumberFromLine(inspectionDetails, 'total', 'ok');
+        const total_runout = getNumberFromLine(inspectionDetails, 'total', 'runout');
+        const total_scrap = getNumberFromLine(inspectionDetails, 'total', 'scrap');
+        const total_rework = getNumberFromLine(inspectionDetails, 'total', 'rework');
+        const total_inspection = getNumberFromLine(inspectionDetails, 'total', 'inspection');
+
+        // Calculate the sum of total ok, total runout, total scrap, and total rework
+        const sum = total_ok + total_runout + total_scrap + total_rework;
+
+        // Check if the sum equals total inspection
+        if (sum === total_inspection) {
+            result += `<p>Inspection ${i + 1}: <span class="success">Validation success</span> <br> Total inspection = ${total_inspection} ; Sum = ${sum} <p>`;
+        } else {
+            result += `<p>Inspection ${i + 1}: <span class="failure">Validation failed</span> <br> Total inspection = ${total_inspection} ; Sum = ${sum} <p>`;
+        }
+    }
+
+    return result.trim();
+}
+
+
+        function analyzeComponent(inputText, component) {
+            // Find all occurrences of "Model"
+            const modelIndices = getAllIndices(inputText.toLowerCase(), 'model');
+
+            let result = '';
+
+            // Analyze component for each model
+            for (let i = 0; i < modelIndices.length; i++) {
+                const modelIndex = modelIndices[i];
+                const nextModelIndex = (i + 1 < modelIndices.length) ? modelIndices[i + 1] : inputText.length;
+                const modelText = inputText.substring(modelIndex, nextModelIndex);
+ 
+                // Find the "Total {component} quantity" line
+                let totalQty;
+                let totalQtyLine = modelText.match(new RegExp(`total\\s${component}\\squantity\\s-\\s(\\d+)`, 'i'));
+                if (totalQtyLine) {
+                    totalQty = parseInt(totalQtyLine[1]);
+                } else {
+                    // Look for the line containing "total {component} quantity" or "{component} details"
+                    const lines = modelText.split('\n');
+                    for (const line of lines) {
+                        if (line.toLowerCase().includes('total') && line.toLowerCase().includes(component) && line.toLowerCase().includes('quantity')) {
+                            const qtyMatch = line.match(/(\d+)/);
+                            if (qtyMatch) {
+                                totalQty = parseInt(qtyMatch[1]);
+                                break;
+                            }
+                        }
+                    }
+                }
+
+                if (!totalQty) {
+                    result += `${component} ${i + 1}: No ${component}\n<br>`;
+                    continue; // Skip this model if total quantity is not found
+                }
+
+                // Find the "{Component} details" section and extract quantities
+                const detailsIndex = modelText.toLowerCase().indexOf(`${component} details`);
+                if (detailsIndex === -1) {
+                    result += `${component} ${i + 1}: Validation failed - ${component} details section not found.\n<br>`;
+                    continue; // Skip this model if "{Component} details" section is not found
+                }
+                const detailsEndIndex = modelText.indexOf('\n\n', detailsIndex);
+                if (detailsEndIndex === -1) {
+                    result += `${component} ${i + 1}: Validation failed - End of ${component} details section not found.\n<br>`;
+                    continue; // Skip this model if end of "{Component} details" section is not found
+                }
+                const detailsSection = modelText.substring(detailsIndex, detailsEndIndex);
+                
+                const qtyMatches = detailsSection.match(/(\d+)/gm);
+
+                
+                if (!qtyMatches) {
+                    result += `${component} ${i + 1}: Validation failed - No quantities found in ${component} details section.\n<br>`;
+                    continue; // Skip this model if no quantities are found in "{Component} details" section
+                }
+                const foundQty = qtyMatches.reduce((sum, match) => {
+                    const qty = parseInt(match.match(/(\d+)/)[1]);
+                    return sum + qty;
+                }, 0);
+
+                // Compare found quantity with expected quantity
+                if (foundQty === totalQty) {
+                    result += `${component} ${i + 1}: <span class="success"> validation success</span><br>Total ${component} quantity - ${totalQty} <br>${component} details - ${foundQty} \n<br>`;
+                } else {
+                    result += `${component} ${i + 1}: <span class="failure"> validation failed</span> <br>Total ${component} quantity - ${totalQty} <br>${component} details - ${foundQty} \n<br>`;
+                }
+            }
+
+            return result.trim();
+        }
+
+
+        function analyzeComstarNumbering(inputText) {
+    let result = '';
+
+    const startingNumber = getNumberFromLine(inputText, 'starting', 'number');
+    const endingNumber = getNumberFromLine(inputText, 'ending', 'number');
+    const okQuantityMatch = findOkQuantityUnderFinalComstar(inputText);
+
+    if (startingNumber && endingNumber) {
+        const difference = endingNumber - startingNumber;
+        if (okQuantityMatch !== null && difference === okQuantityMatch) {
+            result += `<p><span class="success"> validation success</span> <br> Total Ok quantity: ${okQuantityMatch} ; Difference: ${difference}</p>\n<br>`;
+        } else {
+            result += `<p><span class="failure"> validation failed</span> <br> Total Ok quantity: ${okQuantityMatch} ; Difference: ${difference}</p>\n<br>`;
+        }
+    } else {
+        result += `Starting or ending number not found\n<br>`;
+    }
+
+    return result;
+}
+
+        function findOkQuantityUnderFinalComstar(inputText) {
+            const lines = inputText.split('\n');
+            let startSearch = false;
+
+            for (let i = 0; i < lines.length; i++) {
+                const line = lines[i].toLowerCase();
+                if (line.includes('final') && line.includes('comstar')) {
+                    startSearch = true;
+                    continue;
+                }
+
+                if (startSearch && line.includes('total') && line.includes('ok')) {
+                    const numberMatch = line.match(/(\d+)/);
+                    if (numberMatch) {
+                        return parseInt(numberMatch[1]);
+                    }
+                }
+            }
+
+            return null;
+        }
+
+        function getNumberFromLine(inputText, word1, word2) {
+            const lines = inputText.split('\n');
+            for (const line of lines) {
+                if (line.toLowerCase().includes(word1) && line.toLowerCase().includes(word2)) {
+                    const numberMatch = line.match(/(\d+)/);
+                    if (numberMatch) {
+                        return parseInt(numberMatch[1]);
+                    }
+                }
+            }
+            return null;
+        }
+
+ /*       function extendedFeature(formattedText) {
+    let output = ' ';
+        
+
+ //   output = indentHyphen(formattedText);
+
+
+    document.getElementById('outputText').value = output;
+    
+}  */
+
+        function calcPercentage(x, y) {
+  const percent = (x / y) * 100
+  return percent.toFixed(2) ;
+}
+
+        function addPercentage(formattedText) {
+        
+    // Split the formatted text into an array of lines
+    const lines = formattedText.split('\n');
+
+    // Iterate through every model
+    for (let i = 0; i < lines.length; i++) {
+        // Check if the line contains the word 'model'
+        if (lines[i].toLowerCase().includes('model')) {
+            // Find the start and end index of the model section
+            let startIdx = i;
+            let endIdx = i + 1;
+            while (endIdx < lines.length && !lines[endIdx].toLowerCase().includes('model')) {
+                endIdx++;
+            }
+
+            // Calculate the total inspection quantity
+            let total_inspection = 0;
+            for (let j = startIdx; j < endIdx; j++) {
+                if (lines[j].toLowerCase().includes('total') && lines[j].toLowerCase().includes('inspection')) {
+                    total_inspection = getNumberFromLine(lines[j], 'total', 'inspection');
+                    break;
+                }
+            }
+
+            // Calculate and insert the percentage values
+            for (let j = startIdx; j < endIdx; j++) {
+                if (!lines[j].includes('-')) continue;
+
+                let quantity = getNumberFromLine(lines[j], 'total', 'ok');
+                if (quantity === null) quantity = getNumberFromLine(lines[j], 'total', 'runout');
+                if (quantity === null) quantity = getNumberFromLine(lines[j], 'total', 'scrap');
+                if (quantity === null) quantity = getNumberFromLine(lines[j], 'total', 'rework');
+
+                if (quantity !== null) {
+                    const percentage = calcPercentage(quantity, total_inspection);
+                    //add percentage only if It Is Numberic Because if Inspection Is Zero Percentage Becomes Infinity
+                  if(isFinite(percentage)){
+                      
+                      lines[j] = lines[j].replace('-', `(${percentage}%) -`);
+                  }
+                    
+                }
+            }
+
+            // Update the model section in the lines array
+            i = endIdx - 1;
+        }
+    }
+
+    // Join the lines back into a single string
+    const result = lines.join('\n');
+    
+document.getElementById('outputText').value = result;
+    return result;
+}
+
+
+
+ </script>
+</body>
+</html>

@@ -1,0 +1,120 @@
+Dear sir ,
+*Ev wheels production & inspection details*
+*Date : 9 | 03 | 2024*
+*Shift :  " c"*
+
+*01 . CNC machining details*
+
+*CNC model 01 -  comstar to emf*
+Total production quantity  - 30
+Total inspection quantity  - 30
+Total ok quantity    - 18
+Total runout quantity   - 12
+Total scrap quantity   - 
+Total rework quantity   -
+
+
+*02 . Drilling and tapping details*
+
+*Model - BOSCH*
+Total prodution quantity - 40
+Total ok quantity - 38
+Total scrap quantity - 2
+
+*Scrap details*
+   • Tb -2
+   • Db- 
+
+3.rd ins dt
+
+Rd model 1- bosch
+Ins-60
+Ok-42
+Ro-18
+Sp-
+Rw-
+
+Rd model 2-comstar
+Ins-111
+Ok-37
+Ro-36
+Sp-38
+Rw-
+
+Sp dt 
+Vhl ovl-12
+Assembly issue-16
+Rg crack-1
+Id os-2
+Bhl dmg-1
+Bhl pno-1
+Rg dent-1
+Rg dmg-1
+Dhl not okay-3
+
+*04 . Final inspection details*
+
+*Final model 01 -  BOSCH*
+Total inspection quantity - 215
+Total ok quantity - 100
+Total scrap quantity - 20
+Total runout quantity - 75
+Total rework quantity - 20
+
+Sp dt
+Rg dmg-1
+Bhl pnm-1
+Bhl pno-3
+Od bend-1
+Bhl dmg-2
+Rg dent-1
+Weld penetration-1
+Al-5
+Rm dent-1
+Od unw-1
+Grm-2
+
+*rw details*
+Lm-2
+Ig-2
+Thd-2
+Rm bl-2
+Id bl-2
+Chm-1
+Rdm-2
+Rg rust-2
+Cast-1
+Face stm-4
+
+
+Final model 2 -  comstar*
+Total inspection quantity - 306
+Total ok quantity - 190
+Total scrap quantity - 36
+Total runout quantity -  56
+Total rework quantity -24
+
+Sp dt
+Rm dent-2
+Ws-1
+Vhl dmg-4
+Al-7
+Vhl ovl-16
+Rm bl-2
+Rg dent-2
+Vhl us-2
+
+Rw dt
+Rm lm-1
+Chm-14
+Rdm-3
+Rm bl-2
+Rg rust-3
+Cast-1
+
+Note: msd mixup-2
+
+*Comstar numbering details*
+Starting number :  2533
+Ending number :  2723
+" A"  shift start from 2724
