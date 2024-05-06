@@ -84,7 +84,9 @@
         .failure {
             color: red;
         }
-
+        .warning{
+            color: orange;
+        }
         .fullscreen {
     position: fixed;
     top: 0;
@@ -490,7 +492,7 @@ document.addEventListener("DOMContentLoaded", function() {
     return formattedText;
 }
         function alterCase(inputText) {
-    const keywords = [
+        const keywords = [
         'id', 'od', 'cnc', 'vmc','msd', 'emf', 'bosch','sona','comstar', 'amphere', 'bgauss', 'micelio', 
         'lucas','tvs', 'u546'
     ];
@@ -882,14 +884,14 @@ function deleteEmpty(inputText) {
         // Find the "Inspection details" section
         const detailsIndex = inspectionText.toLowerCase().indexOf('model');
         if (detailsIndex === -1) {
-            result += `Inspection ${i + 1}: Validation failed - Inspection details section not found.\n<br>`;
+            result += `Inspection ${i + 1}: <p class="warning" >Validation failed - Inspection details section not found.\n</p><br>`;
             continue; // Skip this inspection if "Inspection details" section is not found
         }
 
         // Find the  of "Inspection details" section
         const detailsEndIndex = inspectionText.indexOf('\n\n', detailsIndex);
         if (detailsEndIndex === -1) {
-            result += `Inspection ${i + 1}: Validation failed - End of inspection  section not found.\n<br>`;
+            result += `Inspection ${i + 1}: <p class="warning" >Validation failed - End of inspection  section not found.\n</p><br>`;
             continue; // Skip this inspection if end of "Inspection details" section is not found
         }
 
@@ -957,12 +959,12 @@ function deleteEmpty(inputText) {
                 // Find the "{Component} details" section and extract quantities
                 const detailsIndex = modelText.toLowerCase().indexOf(`${component} details`);
                 if (detailsIndex === -1) {
-                    result += `${component} ${i + 1}: Validation failed - ${component} details section not found.\n<br>`;
+                    result += `${component} ${i + 1}: <p class="warning" >Validation failed - ${component} details section not found.\n</p><br>`;
                     continue; // Skip this model if "{Component} details" section is not found
                 }
                 const detailsEndIndex = modelText.indexOf('\n\n', detailsIndex);
                 if (detailsEndIndex === -1) {
-                    result += `${component} ${i + 1}: Validation failed - End of ${component} details section not found.\n<br>`;
+                    result += `${component} ${i + 1}: <p class="warning" >Validation failed - End of ${component} details section not found.\n</p><br>`;
                     continue; // Skip this model if end of "{Component} details" section is not found
                 }
                 const detailsSection = modelText.substring(detailsIndex, detailsEndIndex);
@@ -971,7 +973,7 @@ function deleteEmpty(inputText) {
 
                 
                 if (!qtyMatches) {
-                    result += `${component} ${i + 1}: Validation failed - No quantities found in ${component} details section.\n<br>`;
+                    result += `${component} ${i + 1}: <p class="warning" >Validation failed - No quantities found in ${component} details section.\n</p><br>`;
                     continue; // Skip this model if no quantities are found in "{Component} details" section
                 }
                 const foundQty = qtyMatches.reduce((sum, match) => {
