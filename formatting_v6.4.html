@@ -241,7 +241,9 @@
         'flv': 'flange variation',
         'orn': 'orientation',
         'cm':'chamber more',
-        'rp': 'repaint'
+        'rp': 'repaint',
+        'setting scrap': 'setting scraps',
+        'not ok': 'not okay'
 
     };
 
@@ -353,7 +355,7 @@
 }
         function alterCase(inputText) {
     const keywords = [
-        'id', 'od', 'cnc', 'vmc','msd', 'emf', 'bosch','sona','comstar', 'amphere', 'bgauss', 'machelio', 
+        'id', 'od', 'cnc', 'vmc','msd', 'emf', 'bosch','sona','comstar', 'amphere', 'bgauss', 'micelio', 
         'lucas','tvs', 'u546'
     ];
 
@@ -636,6 +638,29 @@
                     return formattedText;
         }
 
+function highlightNote(inputText) {
+    // Split the input text into an array of lines
+    const lines = inputText.split('\n');
+
+    // Iterate through every line
+    for (let i = 0; i < lines.length; i++) {
+        // Check if the line contains the word 'Note'
+        if (lines[i].toLowerCase().includes('note') || lines[i].toLowerCase().includes('notes')) {
+
+
+                    lines[i]=lines[i].trim();
+                    lines[i] = "```"+lines[i]+"```";
+                
+            
+        }
+    }
+
+    // Join the lines back into a single string
+    const formattedText = lines.join('\n');
+    return formattedText;
+}
+
+
 
         function formatText(inputText) {
             // Integrate new formatting functions
@@ -655,6 +680,7 @@
             formattedText = addBulletin(formattedText);
             formattedText = addStar(formattedText);
             formattedText = removeDuplicate(formattedText);
+            formattedText = highlightNote(formattedText);
             formattedText = sorting(formattedText); 
 
            document.getElementById('outputText').value = formattedText;
