@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Text Formatting Tool</title>
-<!--  <link href="tailwind.min.css" rel="stylesheet"> -->
+   <link href="tailwind.min.css" rel="stylesheet"> 
      <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
     <style>
         /* Custom styles */
@@ -242,6 +242,7 @@
         'orn': 'orientation',
         'cm':'chamber more',
         'rp': 'repaint',
+        'ss':'setting scraps',
         'setting scrap': 'setting scraps',
         'not ok': 'not okay'
 
@@ -661,6 +662,32 @@ function highlightNote(inputText) {
 }
 
 
+function deleteEmpty(inputText) {
+	
+    // Split the input text into an array of lines
+    let lines = inputText.split('\n\n');
+
+    // Iterate through each line
+    for (let i = 0; i < lines.length; i++) {
+    	    
+	 if ( lines[i].match(new RegExp(`delete`, 'ig')) || !getNumber(lines[i])) {
+      	    	//remove element from the array
+                var currentIndex=lines.indexOf(lines[i]);
+                lines.splice(currentIndex, 1);
+                // after deleting element from the array , 
+                //the current element moves left/backside to loop pointer ,
+                //it makes the element escapes from the loop,
+                //so move the loop pointer one step back
+                --i;
+        }//if 
+
+    }//for
+
+    // Join the lines back into a single string
+    const formattedText = lines.join('\n\n');
+    return formattedText;
+}
+
 
         function formatText(inputText) {
             // Integrate new formatting functions
@@ -681,7 +708,8 @@ function highlightNote(inputText) {
             formattedText = addStar(formattedText);
             formattedText = removeDuplicate(formattedText);
             formattedText = highlightNote(formattedText);
-            formattedText = sorting(formattedText); 
+            formattedText = deleteEmpty(formattedText);
+            formattedText = sorting(formattedText);  
 
            document.getElementById('outputText').value = formattedText;
            return formattedText;
