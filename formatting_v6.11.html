@@ -804,6 +804,39 @@ function deleteEmpty(inputText) {
     return formattedText;
 }
 
+function nextNumber(inputText) {
+    // Split the formatted text into an array of lines
+    const lines = inputText.split('\n');
+
+    // Iterate through every line
+    for (let i = 0; i < lines.length; i++) {
+        // Check if the line contains 'ending number'
+        if (lines[i].toLowerCase().includes('ending number')) {
+            // Extract the number from the line
+            const numberMatch = lines[i].match(/(\d+)/);
+            const endingNumber = numberMatch ? parseInt(numberMatch[1]) : null;
+
+            // If an ending number is found
+            if (endingNumber !== null) {
+                // Find the next line that starts with 'next'
+                const nextIndex = lines.findIndex((line, idx) => idx > i && line.toLowerCase().startsWith('next'));
+
+                // If the next line is found
+                if (nextIndex !== -1) {
+                    // Increment the ending number
+                    const nextNumber = endingNumber + 1;
+
+                    // Add the incremented number to the end of the next line
+                    lines[nextIndex] = `${lines[nextIndex]} ${nextNumber}`;
+                }
+            }
+        }
+    }
+
+    // Join the lines back into a single string
+    const formattedText = lines.join('\n');
+    return formattedText;
+}
 
         function formatText(inputText) {
             // Integrate new formatting functions
@@ -825,7 +858,8 @@ function deleteEmpty(inputText) {
             formattedText = removeDuplicate(formattedText);
             formattedText = highlightNote(formattedText);
             formattedText = deleteEmpty(formattedText);
-            formattedText = sorting(formattedText);  
+            formattedText = sorting(formattedText);
+	    formattedText = nextNumber(formattedText);
 
            document.getElementById('outputText').value = formattedText;
            return formattedText;
