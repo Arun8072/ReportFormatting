@@ -312,13 +312,19 @@ document.addEventListener("DOMContentLoaded", function() {
         'md': 'model',
         'num': 'number',
         'rd': 'reducer',
+        'bos':'bosch',
+        'com':'comstar',
+        'amp':'amphere',
+        'bgs':'bgauss',
+        'mcl':'micelio',
+        'iqb':'iqube',
         'ovl': 'ovality', 
         'bl':  'bulge',
         'sn': 'starting number:',
         'en': 'ending number:',
         'thd': 'thin down',
         'ig': 'Interference gap',
-        'chm': 'chattering mark',
+        'ctm': 'chattering mark',
         'stm':'step mark',
         'grm' : 'grinding mark',
         'scm' : 'scoring mark',
@@ -338,31 +344,35 @@ document.addEventListener("DOMContentLoaded", function() {
         'dmg': 'damage',
         'lm': 'line mark',
         'tl': 'trim line',
-        'en': 'edge nipping',
+        'en': 'edge nippin',
         'rm':'rim',
         'rg':'ring',
-        'ck': 'crack',
+        'crk': 'crack',
         'rs':'rust',
         'pno':'position not okay',
+        'fl': 'flange',
+        'flv': 'flange variation',
         'flb': 'flange bend',
         'rmb':'rim bend',
+        'rmd':'rim dent',
+        'rgd':'ring dent',
         'odb':'od bend',
-        'wm': 'weld missing',
-        'ws': 'weld shift',
-        'wp':'weld penetration',
+        'wl':'weld',
+        'wlm': 'weld missing',
+        'wls': 'weld shift',
+        'wlp':'weld penetration',
         'wd': 'width',
         'bc': 'batch code',
         'tm': 'tap missing',
         'dm': 'drill missing',
-        'fl': 'flange',
-        'flv': 'flange variation',
         'orn': 'orientation',
-        'cm':'chamber more',
+        'cbm':'chamber more',
         'rp': 'repaint',
         'ss':'setting scraps',
         'setting scrap': 'setting scraps',
-        'not ok': 'not okay'
-
+        'not ok': 'not okay',
+        'bn': 'bend',
+        'dn':'dent'
     };
 
 
@@ -414,7 +424,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
         function addSpacing(inputText) {
     // Define special characters
-    const specialCharacters = ['!','*','"', '#', '$', '%', '&', "'", '(', ')', '+', ',', '-', '.', '/', ':', ';', '<', '=', '>', '?', '@', '[', '\\', ']', '^', '_', '`', '{', '|', '}', '~'];
+    const specialCharacters = ['!','*','"', '#', '$', '%', '&', "'", '(', ')', '+', ',', '-', '.', '/', ':', ';', '<', '=', '>', '?', '@', '[', '\\', ']', '^', '_', '{', '|', '}', '~'];
 
     // Split the input text into an array of characters
     const characters = inputText.split('');
@@ -473,7 +483,7 @@ document.addEventListener("DOMContentLoaded", function() {
 }
         function alterCase(inputText) {
     const keywords = [
-        'id', 'od', 'cnc', 'vmc','msd', 'emf', 'bosch','sona','comstar', 'amphere', 'bgauss', 'micelio','machileo','lucas','tvs', 'u546'
+        'id', 'od', 'cnc', 'vmc','msd', 'emf', 'bosch','sona','comstar', 'amphere', 'bgauss', 'micelio','machileo','lucas','tvs', 'u546','iqube','ppap'
     ];
 
     // Split the input text into an array of lines
