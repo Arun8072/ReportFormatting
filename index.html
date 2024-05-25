@@ -11,14 +11,14 @@
            font-size: 14px; /* Decrease the font size */
         }
 
-		#percentageSymbol {
-		   margin-left: 5px;
-		 position: absolute;
-		            top: 8px;
-		            right: 58px;
-		            cursor: pointer;
-		           
-		}
+        #percentageSymbol {
+           margin-left: 5px;
+         position: absolute;
+                    top: 8px;
+                    right: 58px;
+                    cursor: pointer;
+                   
+        }
 
         .copy-button {
             position: absolute;
@@ -234,32 +234,32 @@ document.addEventListener("DOMContentLoaded", function() {
         inputText.classList.toggle("fullscreen");
     });
 });
-		//add date 
-		dateFormat(document.getElementById('inputText').value); 
+        //add date 
+        dateFormat(document.getElementById('inputText').value); 
 
         // Existing functions
       document.getElementById('formatButton').addEventListener('click', function() {
             const inputText = document.getElementById('inputText').value;
-                  	
+                    
             //1. perform Text Formatting on Input text And Give Output 
             const formattedOutput = formatText(inputText);
             //2. preform analysis On Formatted Text And Show On Popup 
-   			 analyzeText(formattedOutput);
+             analyzeText(formattedOutput);
     
 
     document.getElementById('percentageSymbol').addEventListener('click', function() {
            
                 //3.get formatted Text as After Analysis to Add Percentage To Avoid Numberic Collision
-	    addPercentage(formattedOutput);
+        addPercentage(formattedOutput);
 
-	            document.getElementById('percentageSymbol').innerText = 'Added %';
-	            setTimeout(function() {
-	                document.getElementById('percentageSymbol').innerText = 'Add %';
-	            }, 2000); // Change back to 'Add' after 2 seconds
-	     });
+                document.getElementById('percentageSymbol').innerText = 'Added %';
+                setTimeout(function() {
+                    document.getElementById('percentageSymbol').innerText = 'Add %';
+                }, 2000); // Change back to 'Add' after 2 seconds
+         });
 
     
-	  });
+      });
 
 
         document.getElementById('copyButton').addEventListener('click', function() {
@@ -294,9 +294,9 @@ document.addEventListener("DOMContentLoaded", function() {
      const regex = /(\d)([a-zA-Z])/g;
 
     // Replace each occurrence of a digit followed by an alphabet character with digit + space + alphabet character
-   	 const formattedText = inputText.replace(regex, '$1 $2');
+     const formattedText = inputText.replace(regex, '$1 $2');
 
-   	 return formattedText;
+     return formattedText;
      }
 
 function dateFormat(inputText) {
@@ -306,16 +306,49 @@ function dateFormat(inputText) {
 
     const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
 
-	const todayDate = new Date();
-	let month = months[todayDate.getMonth()];
-	let year = todayDate.getFullYear();
- 	lines[2]=`*Date : | ${month} | ${year} *`;
+    const todayDate = new Date();
+    let month = months[todayDate.getMonth()];
+    let year = todayDate.getFullYear();
+    lines[2]=`*Date : | ${month} | ${year} *`;
   
     // Join the lines back into a single string
     document.getElementById('inputText').value = lines.join('\n');
     
 }
 
+function nextShift(inputText) {
+
+    // Split the input text into an array of lines
+    const lines = inputText.split('\n');
+
+    const shift = lines[3].split('"');
+    const myShift = shift[1];
+    alert(myShift)
+    for (let i = 0; i < lines.length; i++) {
+        // Check if the line contains 'scrap details' or 'rework details' in any case
+        if (lines[i].toLowerCase().includes('next')) {
+            var nextShiftLine = lines[i].split('"');
+
+
+            if (myShift.toLowerCase().trim() === 'a' || myShift.toLowerCase().trim() === 'A') {
+                nextShiftLine[1] = "B";
+            } else if (myShift.toLowerCase().trim() === 'b' || myShift.toLowerCase().trim() === 'B') {
+                nextShiftLine[1] = "C";
+            } else if (myShift.toLowerCase().trim() === 'c' || myShift.toLowerCase().trim() === 'C') {
+                nextShiftLine[1] = "A";
+            } else {
+                nextShiftLine[1] = " "; // default
+            }
+            
+            lines[i] = nextShiftLine.join('"');
+
+        }
+    }
+
+    const formattedText = lines.join('\n');
+    return formattedText;
+
+}
 
 
         function wordExtend(inputText) {
@@ -728,15 +761,15 @@ function wordAttach(inputText) {
     return formattedText;
 }
 
-		function getNumber(input){
-         	 var numberMatch = input.match(/(\d+)/);                         		                         
+        function getNumber(input){
+             var numberMatch = input.match(/(\d+)/);                                                         
             if (numberMatch) {
-            	return parseInt(numberMatch[0]);				                    			                            
+                return parseInt(numberMatch[0]);                                                                            
             }else { return 0 ; }
-     	}
+        }
 
         function sorting(inputText) {
-  		
+        
                     // Look for the line containing "total {component} quantity" or "{component} details"
                    
                     const lines = inputText.split('\n');
@@ -746,7 +779,7 @@ function wordAttach(inputText) {
                    //finding the starting index and ending index of the section to sort in an array
                     for (let i = 0; i < lines.length; i++) {
 
-                    	//sorting occurs for scrap and rework
+                        //sorting occurs for scrap and rework
                         if ( (lines[i].toLowerCase().includes('scrap') || lines[i].toLowerCase().includes('rework') ) && lines[i].toLowerCase().includes('details')) {
                            var startIndex=i;                         
                            var endIndex=lines.indexOf('',startIndex);                          
@@ -755,26 +788,26 @@ function wordAttach(inputText) {
 
                         //sorting  in ascending order                      
                          if (found===true && startIndex<i && i<endIndex &&  !lines[i]=='' &&  !lines[i+1]=='' ){               
-                         	
-                         	if (getNumber(lines[i])>getNumber(lines[i+1])){                                            	 
-                           	var temp = lines[i];
-                           	lines[i] = lines[i+1];
-                           	lines[i+1] = temp;                           
-                           	swapped.push(1); //to know swap occurs
+                            
+                            if (getNumber(lines[i])>getNumber(lines[i+1])){                                              
+                            var temp = lines[i];
+                            lines[i] = lines[i+1];
+                            lines[i+1] = temp;                           
+                            swapped.push(1); //to know swap occurs
                            }
-     		 	  		 	
+                            
                          } 
                          
 
                          // if swapped occurs there is 1 in swapped array so until (array full of 0) swapping doesnt occurs do sorting
                          // if swapped array includes 1 move the pointer to starting line of the section to re do sort
                          if (endIndex<=i){
-                         	found =false;                        
-                         	 if (swapped.includes(1) ){                         	 	
-                         	  i=startIndex-1 ;
-                         	 	swapped=[];                     
-                         	 }
-                         }				
+                            found =false;                        
+                             if (swapped.includes(1) ){                                 
+                              i=startIndex-1 ;
+                                swapped=[];                     
+                             }
+                         }              
 
                     }//for
  
@@ -809,15 +842,15 @@ function highlightNote(inputText) {
 
 
 function deleteEmpty(inputText) {
-	
+    
     // Split the input text into an array of lines
     let lines = inputText.split('\n\n');
 
     // Iterate through each line
     for (let i = 0; i < lines.length; i++) {
-    	    
-	 if ( lines[i].match(new RegExp(`delete`, 'ig')) || !getNumber(lines[i])) {
-      	    	//remove element from the array
+            
+     if ( lines[i].match(new RegExp(`delete`, 'ig')) || !getNumber(lines[i])) {
+                //remove element from the array
                 var currentIndex=lines.indexOf(lines[i]);
                 lines.splice(currentIndex, 1);
                 // after deleting element from the array , 
@@ -872,8 +905,8 @@ function nextNumber(inputText) {
             // Integrate new formatting functions
             let formattedText ='';
 
-            
-            formattedText = splitAlpha(inputText);
+            formattedText = nextShift(inputText);
+            formattedText = splitAlpha(formattedText);
             formattedText = wordExtend(formattedText);
             formattedText = wordAttach(formattedText);
             formattedText = addSpacing(formattedText);
@@ -890,7 +923,7 @@ function nextNumber(inputText) {
             formattedText = highlightNote(formattedText);
             formattedText = deleteEmpty(formattedText);
             formattedText = sorting(formattedText);
-	        formattedText = nextNumber(formattedText);
+            formattedText = nextNumber(formattedText);
 
            document.getElementById('outputText').value = formattedText;
            return formattedText;
