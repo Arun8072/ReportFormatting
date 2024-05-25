@@ -99,16 +99,17 @@
 
 
     </style>
+
 </head>
 <body class="bg-gray-100">
     <div class="container mx-auto p-6">
         <h3 class="text-2xl font-bold mb-6">Text Formatting Tool</h3>
         <div>
-            <label for="inputText" class="block mb-2 font-medium">Paste your content:</label>
-            <textarea id="inputText" class="w-full h-40 px-4 py-2 rounded-md border-gray-300 focus:outline-none focus:border-blue-500">
+            <label for="inputText" class="block mb-2 font-medium">Add your content:</label>
+            <textarea id="inputText" class="w-full h-40 px-4 py-2 rounded-md border-gray-300 focus:outline-none focus:border-blue-500" autofocus="true">
 `Dear sir`
 *Ev wheels production & inspection details*
-*Date :  | |  *
+*Date : | |  *
 *Shift :  " "*
 
 *01 . CNC machining details*
@@ -233,16 +234,17 @@ document.addEventListener("DOMContentLoaded", function() {
         inputText.classList.toggle("fullscreen");
     });
 });
-
-
+		//add date 
+		dateFormat(document.getElementById('inputText').value); 
 
         // Existing functions
       document.getElementById('formatButton').addEventListener('click', function() {
             const inputText = document.getElementById('inputText').value;
+                  	
             //1. perform Text Formatting on Input text And Give Output 
             const formattedOutput = formatText(inputText);
             //2. preform analysis On Formatted Text And Show On Popup 
-    analyzeText(formattedOutput);
+   			 analyzeText(formattedOutput);
     
 
     document.getElementById('percentageSymbol').addEventListener('click', function() {
@@ -296,6 +298,24 @@ document.addEventListener("DOMContentLoaded", function() {
 
    	 return formattedText;
      }
+
+function dateFormat(inputText) {
+
+    // Split the input text into an array of lines
+    const lines = inputText.split('\n');
+
+    const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+
+	const todayDate = new Date();
+	let month = months[todayDate.getMonth()];
+	let year = todayDate.getFullYear();
+ 	lines[2]=`*Date : | ${month} | ${year} *`;
+  
+    // Join the lines back into a single string
+    document.getElementById('inputText').value = lines.join('\n');
+    
+}
+
 
 
         function wordExtend(inputText) {
@@ -386,7 +406,7 @@ document.addEventListener("DOMContentLoaded", function() {
 }
 
 
-        function wordAttach(inputText) {
+function wordAttach(inputText) {
     const specifiedWords = ['production', 'inspection', 'runout', 'ok', 'rework', 'scrap'];
 
     // Split the input text into an array of lines
@@ -851,6 +871,7 @@ function nextNumber(inputText) {
         function formatText(inputText) {
             // Integrate new formatting functions
             let formattedText ='';
+
             
             formattedText = splitAlpha(inputText);
             formattedText = wordExtend(formattedText);
@@ -869,7 +890,7 @@ function nextNumber(inputText) {
             formattedText = highlightNote(formattedText);
             formattedText = deleteEmpty(formattedText);
             formattedText = sorting(formattedText);
-	    formattedText = nextNumber(formattedText);
+	        formattedText = nextNumber(formattedText);
 
            document.getElementById('outputText').value = formattedText;
            return formattedText;
