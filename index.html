@@ -106,7 +106,7 @@
         <h3 class="text-2xl font-bold mb-6">Text Formatting Tool</h3>
         <div>
             <label for="inputText" class="block mb-2 font-medium">Add your content:</label>
-            <textarea id="inputText" class="w-full h-40 px-4 py-2 rounded-md border-gray-300 focus:outline-none focus:border-blue-500" autofocus="true">
+            <textarea id="inputText" class="w-full h-40 px-4 py-2 rounded-md border-gray-300 ">
 `Dear sir`
 *Ev wheels production & inspection details*
 *Date : | |  *
@@ -155,7 +155,7 @@ Total scrap quantity -
 
 *03 . Final inspection details*
 
-Fi md 1 - Bosch
+Fi md 1 - bosch
 inspection-
 Ok-
 Runout-
@@ -181,7 +181,7 @@ scrap details
 rework details
 
 
-Fi md 3- comstar
+Fi md 3- 
 inspection-
 Ok-
 Runout-
@@ -409,6 +409,7 @@ function nextShift(inputText) {
         'flb': 'flange bend',
         'rmb':'rim bend',
         'rmd':'rim dent',
+        'rgb':'ring bend',
         'rgd':'ring dent',
         'odb':'od bend',
         'wl':'weld',
@@ -426,7 +427,9 @@ function nextShift(inputText) {
         'setting scrap': 'setting scraps',
         'not ok': 'not okay',
         'bn': 'bend',
-        'dn':'dent'
+        'dn':'dent',
+        "btj": "butt joint",
+        'mis':'missing'
     };
 
 
