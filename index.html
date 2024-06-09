@@ -20,7 +20,7 @@
                    
         }
 
-        .copy-button {
+        .upright-button {
             position: absolute;
             top: 8px;
             right: 8px;
@@ -104,9 +104,9 @@
 <body class="bg-gray-100">
     <div class="container mx-auto p-6">
         <h3 class="text-2xl font-bold mb-6">Text Formatting Tool</h3>
-        <div>
+        <div class="relative">
             <label for="inputText" class="block mb-2 font-medium">Add your content:</label>
-            <textarea id="inputText" class="w-full h-40 px-4 py-2 rounded-md border-gray-300 ">
+            <textarea id="inputText" class="w-full h-40 px-4 py-2 rounded-md border-gray-300 focus:outline-none focus:border-blue-500">
 `Dear sir`
 *Ev wheels production & inspection details*
 *Date : | |  *
@@ -203,6 +203,7 @@ Next "  "  shift start from :
 
 </textarea>
 <!-- extra space between scrap and details make them unrecognisable -->
+<span id="retrieve" class="upright-button text-gray-600 cursor-pointer" onclick="retrieve()">Retrieve</span>
         </div>
         <button id="formatButton" class="mt-4 px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 focus:outline-none focus:bg-blue-600 ">Format Text</button>
         <div class="relative mt-8">
@@ -210,7 +211,7 @@ Next "  "  shift start from :
             <textarea id="outputText" class="w-full h-96 px-4 py-2 rounded-md border-gray-300 focus:outline-none focus:border-blue-500 relative" readonly></textarea>
             <span id="percentageSymbol">Add &#37;</span>
 
-<span id="copyButton" class="copy-button text-gray-600 cursor-pointer">Copy</span>
+<span id="copyButton" class="upright-button text-gray-600 cursor-pointer">Copy</span>
         </div>
     </div>
 
@@ -1193,7 +1194,24 @@ document.getElementById('outputText').value = result;
     return result;
 }
 
+//localStorage
+document.addEventListener("DOMContentLoaded", function() {
+    const inputText = document.getElementById("inputText");
 
+    // Save the inputText value to local storage on every letter entered
+    inputText.addEventListener("input", function() {
+        localStorage.setItem("inputText", inputText.value);
+    });
+
+    
+});
+
+    // Retrieve and set the value from local storage if it exists
+function retrieve (){
+    if (localStorage.getItem("inputText")) {
+        inputText.value = localStorage.getItem("inputText");
+    }
+}
 
  </script>
 </body>
