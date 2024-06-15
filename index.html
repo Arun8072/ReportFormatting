@@ -1216,3 +1216,47 @@ function retrieve (){
  </script>
 </body>
 </html>
+pection);
+                    //add percentage only if It Is Numberic Because if Inspection Is Zero Percentage Becomes Infinity
+                  if(isFinite(percentage)){
+                      
+                      lines[j] = lines[j].replace('-', `(${percentage}%) -`);
+                  }
+                    
+                }
+            }
+
+            // Update the model section in the lines array
+            i = endIdx - 1;
+        }
+    }
+
+    // Join the lines back into a single string
+    const result = lines.join('\n');
+    
+document.getElementById('outputText').value = result;
+    return result;
+}
+
+//localStorage
+document.addEventListener("DOMContentLoaded", function() {
+    const inputText = document.getElementById("inputText");
+
+    // Save the inputText value to local storage on every letter entered
+    inputText.addEventListener("input", function() {
+        localStorage.setItem("inputText", inputText.value);
+    });
+
+    
+});
+
+    // Retrieve and set the value from local storage if it exists
+function retrieve (){
+    if (localStorage.getItem("inputText")) {
+        inputText.value = localStorage.getItem("inputText");
+    }
+}
+
+ </script>
+</body>
+</html>
