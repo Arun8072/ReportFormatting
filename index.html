@@ -97,7 +97,47 @@
     resize: none;
 }
 
+ #toast {
+      visibility: hidden;
+      min-width: 250px;
+      margin-left: -125px;
+      background-color: #333;
+      color: #fff;
+      text-align: center;
+      border-radius: 3px;
+      padding: 16px;
+      position: fixed;
+      z-index: 2;
+      left: 50%;
+      top: 30px;
+      font-size: 17px;
+    }
 
+    #toast.show {
+      visibility: visible;
+      -webkit-animation: fadein 0.5s, fadeout 0.5s 2.5s;
+      animation: fadein 0.5s, fadeout 0.5s 2.5s;
+    }
+
+    @-webkit-keyframes fadein {
+      from {top: 0; opacity: 0;}
+      to {top: 30px; opacity: 1;}
+    }
+
+    @keyframes fadein {
+      from {top: 0; opacity: 0;}
+      to {top: 30px; opacity: 1;}
+    }
+
+    @-webkit-keyframes fadeout {
+      from {top: 30px; opacity: 1;}
+      to {top: 0; opacity: 0;}
+    }
+
+    @keyframes fadeout {
+      from {top: 30px; opacity: 1;}
+      to {top: 0; opacity: 0;}
+    }
     </style>
 
 </head>
@@ -224,7 +264,10 @@ Next "  "  shift start from :
         </div>
     </div>
 
-
+<!-- the toast bar -->
+<div id="toast" class="fixed bottom-4 left-4 bg-blue-500 text-white py-2 px-4 rounded-md hidden">
+  <span id="toastMessage"></span>
+</div>
 
     <script>
 
@@ -1213,49 +1256,57 @@ function retrieve (){
     }
 }
 
- </script>
-</body>
-</html>
-pection);
-                    //add percentage only if It Is Numberic Because if Inspection Is Zero Percentage Becomes Infinity
-                  if(isFinite(percentage)){
-                      
-                      lines[j] = lines[j].replace('-', `(${percentage}%) -`);
-                  }
-                    
-                }
+
+// Get the input field element
+    const inputField = document.getElementById('inputText');
+    // Get the toast element
+    const toast = document.getElementById('toast');
+
+    // Add an event listener to the input field for the "keyup" event
+    inputField.addEventListener('keyup', function(event) {
+      // Check if the pressed key is the equal sign (=)
+      if (event.key === '=') {
+        // Get the value of the input field
+        const inputValue = inputField.value;
+        // Find the first and last occurrences of the equal sign (=)
+        const firstEqualIndex = inputValue.indexOf('=');
+        const lastEqualIndex = inputValue.lastIndexOf('=');
+        // Check if there are two equal signs in the input value
+        if (firstEqualIndex !== -1 && lastEqualIndex !== -1 && firstEqualIndex !== lastEqualIndex) {
+          // Get the value between the two equal signs
+          const expression = inputValue.slice(firstEqualIndex + 1, lastEqualIndex);
+          // Extracts numbers and symbols from the expression
+          const numbersAndSymbols = expression.match(/\d+|\+|-+/g);
+          // Solves the expression
+          let result = parseFloat(numbersAndSymbols[0]);
+          for (let i = 1; i < numbersAndSymbols.length; i += 2) {
+            const operator = numbersAndSymbols[i];
+            const operand = parseFloat(numbersAndSymbols[i + 1]);
+            switch (operator) {
+              case '+':
+                result += operand;
+                break;
+              case '-':
+                result -= operand;
+                break;
             }
+          }
 
-            // Update the model section in the lines array
-            i = endIdx - 1;
+          // Show the result in the toast
+          toast.textContent = `Result: ${result}`;
+          toast.className = 'show';
+          // Removes the toast after 3 seconds
+          setTimeout(function() {
+            toast.className = toast.className.replace('show', '');
+          }, 3000);
+
+          // Replace the expression with the result
+          const newValue = `${result}`;
+          document.getElementById('outputText').value = inputValue.replace(inputValue.slice(firstEqualIndex, lastEqualIndex + 1), newValue);
+          
         }
-    }
-
-    // Join the lines back into a single string
-    const result = lines.join('\n');
-    
-document.getElementById('outputText').value = result;
-    return result;
-}
-
-//localStorage
-document.addEventListener("DOMContentLoaded", function() {
-    const inputText = document.getElementById("inputText");
-
-    // Save the inputText value to local storage on every letter entered
-    inputText.addEventListener("input", function() {
-        localStorage.setItem("inputText", inputText.value);
+      }
     });
-
-    
-});
-
-    // Retrieve and set the value from local storage if it exists
-function retrieve (){
-    if (localStorage.getItem("inputText")) {
-        inputText.value = localStorage.getItem("inputText");
-    }
-}
 
  </script>
 </body>
