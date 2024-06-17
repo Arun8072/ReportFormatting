@@ -1264,10 +1264,18 @@ function retrieve (){
 
     // Add an event listener to the input field for the "keyup" event
     inputField.addEventListener('keyup', function(event) {
-      // Check if the pressed key is the equal sign (=)
-      if (event.key === '=') {
+
+         // Get the value of the input field
+      const inputValue = inputField.value;
+
+        //if (event.key === '=') - this event is not detected in mobile so used this alternative match function 
+
+      // Check if the input value has two equal signs
+      const hasEqualSigns = inputValue.match(/=.*?=/) !== null;
+
+      if (hasEqualSigns) {
         // Get the value of the input field
-        const inputValue = inputField.value;
+       // const inputValue = inputField.value;
         // Find the first and last occurrences of the equal sign (=)
         const firstEqualIndex = inputValue.indexOf('=');
         const lastEqualIndex = inputValue.lastIndexOf('=');
