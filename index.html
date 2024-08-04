@@ -92,7 +92,7 @@
     left: 0;
     width: 100vw;
     height: 100vh;
-    z-index: 1000;
+    z-index: 100;
     margin: 0;
     resize: none;
 }
@@ -107,7 +107,7 @@
       border-radius: 3px;
       padding: 16px;
       position: fixed;
-      z-index: 2;
+      z-index: 105;/*more than fullscreen to show above the fullscreen*/
       left: 50%;
       top: 30px;
       font-size: 17px;
@@ -1118,34 +1118,50 @@ function nextNumber(inputText) {
         }
 
 
-        function analyzeComstarNumbering(inputText) {
+    function analyzeComstarNumbering(inputText) {
+    var section_array = inputText.split('\n\n');
     let result = '';
 
+    for (let i = (section_array.length-1); i >= 0; i--) {
+
+                var section = section_array[i].toLowerCase();
+                if (section.includes('numbering') && section.includes('details*')) {
+                    var line_array = section.trim().split('\n');
+                    var words_array=line_array[0].split(' ');
+                    let letter_array=words_array[0].split('');
+                    letter_array.shift(); //removing star
+                    modal_found= letter_array.join("");
+                    console.log(modal_found);
+
+   
     const startingNumber = getNumberFromLine(inputText, 'starting', 'number');
     const endingNumber = getNumberFromLine(inputText, 'ending', 'number');
-    const okQuantityMatch = findOkQuantityUnderFinalComstar(inputText);
+    const okQuantityMatch = findOkQuantityInFinal(inputText,modal_found);
 
     if (startingNumber && endingNumber) {
         const difference = endingNumber - startingNumber;
         if (okQuantityMatch !== null && difference === okQuantityMatch) {
-            result += `<p><span class="success"> validation success</span> <br> Total Ok quantity: ${okQuantityMatch} ; Difference: ${difference}</p>\n<br>`;
+            result += `<p> ${modal_found} : <span class="success">validation success</span> <br> Total Ok quantity: ${okQuantityMatch} ; Difference: ${difference}</p>`;
         } else {
-            result += `<p><span class="failure"> validation failed</span> <br> Total Ok quantity: ${okQuantityMatch} ; Difference: ${difference}</p>\n<br>`;
+            result += `<p> ${modal_found} : <span class="failure">validation failed</span> <br> Total Ok quantity: ${okQuantityMatch} ; Difference: ${difference}</p>`;
         }
     } else {
-        result += `Starting or ending number not found\n<br>`;
+        result += `<p> ${modal_found} : Starting or ending number not found</p>`;
     }
 
+             }//if
+    }//for
+     //result +="<br>";
     return result;
 }
 
-        function findOkQuantityUnderFinalComstar(inputText) {
+        function findOkQuantityInFinal(inputText,modal_found) {
             const lines = inputText.split('\n');
             let startSearch = false;
 
             for (let i = 0; i < lines.length; i++) {
                 const line = lines[i].toLowerCase();
-                if (line.includes('final') && line.includes('comstar')) {
+                if (line.includes('final') && line.includes(modal_found)) {
                     startSearch = true;
                     continue;
                 }
@@ -1257,10 +1273,10 @@ function retrieve (){
 }
 
 
-// Get the input field element
-    const inputField = document.getElementById('inputText');
-    // Get the toast element
-    const toast = document.getElementById('toast');
+     // Get the input field element
+     const inputField = document.getElementById('inputText');
+     // Get the toast element
+     const toast = document.getElementById('toast');
 
     // Add an event listener to the input field for the "keyup" event
     inputField.addEventListener('keyup', function(event) {
@@ -1303,19 +1319,23 @@ function retrieve (){
           // Show the result in the toast
           toast.textContent = `Result: ${result}`;
           toast.className = 'show';
+
           // Removes the toast after 3 seconds
           setTimeout(function() {
             toast.className = toast.className.replace('show', '');
-          }, 3000);
+          }, 4000);
 
           // Replace the expression with the result
-          const newValue = `${result}`;
+          // const newValue = `${result}`;
+
+          //remove expresion from output
+          const newValue = '';
+
           document.getElementById('outputText').value = inputValue.replace(inputValue.slice(firstEqualIndex, lastEqualIndex + 1), newValue);
           
         }
       }
-    });
-
+    }); 
  </script>
 </body>
 </html>
