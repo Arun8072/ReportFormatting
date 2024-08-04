@@ -1119,19 +1119,27 @@ function nextNumber(inputText) {
 
 
     function analyzeComstarNumbering(inputText) {
-    var section_array = inputText.split('\n\n');
+    // -> split into sections
+    // -> finding numbering section 
+    // -> for all numbering sections 
+    // -> get starting number + get ending number + find the modal name in it 
+    // -> with modal name find the relative final inspection section 
+    // -> find ok counting 
+    // -> compare difference start num and end num to ok num
+
+    var section_array = inputText.split('\n\n'); //splitted as section
     let result = '';
 
-    for (let i = (section_array.length-1); i >= 0; i--) {
+    for (let i = (section_array.length-1); i >= 0; i--) { 
 
                 var section = section_array[i].toLowerCase();
                 if (section.includes('numbering') && section.includes('details*')) {
+                    //finding the modal name of numbering details
                     var line_array = section.trim().split('\n');
                     var words_array=line_array[0].split(' ');
                     let letter_array=words_array[0].split('');
-                    letter_array.shift(); //removing star
+                    letter_array.shift(); //removing star symbol
                     modal_found= letter_array.join("");
-                    console.log(modal_found);
 
    
     const startingNumber = getNumberFromLine(inputText, 'starting', 'number');
