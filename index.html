@@ -461,6 +461,9 @@ function nextShift(inputText) {
         'wls': 'weld shift',
         'wlp':'weld penetration',
         'wd': 'width',
+        'wdu':"width undersize",
+        'wdo':"width oversize",
+        'wdv':"width variation",
         'bc': 'batch code',
         'tm': 'tap missing',
         'dm': 'drill missing',
@@ -472,8 +475,18 @@ function nextShift(inputText) {
         'not ok': 'not okay',
         'bn': 'bend',
         'dn':'dent',
-        "btj": "butt joint",
-        'mis':'missing'
+        'btj': "butt joint",
+        'pp':"paint problem",
+        'pg':"pin gauge",
+        'nga':"no go answering",
+        'gna':"go not answering",
+        'ans':"answering",
+        'tpr':"tapper",
+        'var':"variation",
+        'ido':"ID ovality",
+        'idt':"ID tapper",
+        'ra':"roughness",
+        'miss':'missing'
     };
 
 
@@ -982,10 +995,10 @@ function nextNumber(inputText) {
 
     // Analyze scrap and rework components
     output += "Scrap analysis<br>" + analyzeComponent(inputText, 'scrap');
-    output += '<br>' + "Rework analysis<br>" + analyzeComponent(inputText, 'rework');
+    output += '<br>' + "Rework Analysis<br>" + analyzeComponent(inputText, 'rework');
 
     // Analyze comstar numbering details
-    output += '<br>' +"Comstar numbering details : " +analyzeComstarNumbering(inputText);
+    output += '<br>' +"Comstar Numbering Analysis" +analyzeComstarNumbering(inputText);
 
     // Analyze inspection details
     output += '<br>'+"Inspection Analysis" + analyzeInspection(inputText);
@@ -1280,7 +1293,8 @@ function retrieve (){
     }
 }
 
-
+function calculation() {
+    
      // Get the input field element
      const inputField = document.getElementById('inputText');
      // Get the toast element
@@ -1344,6 +1358,10 @@ function retrieve (){
         }
       }
     }); 
+
+   }//calc
+   calculation();
+
  </script>
 </body>
 </html>
