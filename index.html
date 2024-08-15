@@ -154,7 +154,7 @@
 
 *01 . CNC machining details*
 
-*CNC model 01 -  bosch*
+CNC model 01 - 
 Total production quantity  -
 Total inspection quantity  - 
 Total ok quantity    -
@@ -193,9 +193,18 @@ Total scrap quantity -
    • Tb -
    • Db- 
 
+*Model vmc - *
+Total prodution quantity -
+Total ok quantity - 
+Total scrap quantity -
+
+*Scrap details*
+   • Tb -
+   • Db- 
+
 *03 . Final inspection details*
 
-Fi md 1 - bosch
+Fi md 1 - 
 inspection-
 Ok-
 Runout-
@@ -456,6 +465,7 @@ function nextShift(inputText) {
         'rgb':'ring bend',
         'rgd':'ring dent',
         'odb':'od bend',
+        'odd':"OD dent",
         'wl':'weld',
         'wlm': 'weld missing',
         'wls': 'weld shift',
@@ -478,12 +488,13 @@ function nextShift(inputText) {
         'btj': "butt joint",
         'pp':"paint problem",
         'pg':"pin gauge",
+        'idg':"ID guage",
         'nga':"no go answering",
         'gna':"go not answering",
         'ans':"answering",
         'tpr':"tapper",
         'var':"variation",
-        'iu':"ID under size",
+        'iu':"ID unwash",
         'fu':"face unwash",
         'ra':"roughness",
         'miss':'missing'
@@ -1154,13 +1165,12 @@ function nextNumber(inputText) {
                     letter_array.shift(); //removing star symbol
                     modal_found= letter_array.join("");
 
-   
-    const startingNumber = getNumberFromLine(inputText, 'starting', 'number');
-    const endingNumber = getNumberFromLine(inputText, 'ending', 'number');
-    const okQuantityMatch = findOkQuantityInFinal(inputText,modal_found);
+    let startingNumber = getNumberFromLine(section, 'starting', 'number');
+    let endingNumber = getNumberFromLine(section, 'ending', 'number');
+    let okQuantityMatch = findOkQuantityInFinal(inputText,modal_found);
 
     if (startingNumber && endingNumber) {
-        const difference = endingNumber - startingNumber;
+        let difference = endingNumber - startingNumber;
         if (okQuantityMatch !== null && difference === okQuantityMatch) {
             result += `<p> ${modal_found} : <span class="success">validation success</span> <br> Total Ok quantity: ${okQuantityMatch} ; Difference: ${difference}</p>`;
         } else {
