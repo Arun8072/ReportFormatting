@@ -11,20 +11,28 @@
            font-size: 14px; /* Decrease the font size */
         }
 
-        #percentageSymbol {
-           margin-left: 5px;
+        .upright-button-1 {
+            position: absolute;
+            font-size: 16px;
+            top: 8px; 
+            right: 8px;  
+            cursor: pointer;
+        }
+        .upright-button-2{
          position: absolute;
+         font-size: 16px;
                     top: 8px;
                     right: 58px;
                     cursor: pointer;
-                   
+                    margin-left: 5px;
         }
-
-        .upright-button {
-            position: absolute;
-            top: 8px;
-            right: 8px;
-            cursor: pointer;
+        .upright-button-3{
+         position: absolute;
+         font-size: 16px;
+                    top: 8px;
+                    right: 110px;
+                    cursor: pointer;
+                    margin-left: 5px;
         }
 
         /* Popup styles */
@@ -252,15 +260,18 @@ Next "  "  shift start from :
 
 </textarea>
 <!-- extra space between scrap and details make them unrecognisable -->
-<span id="retrieve" class="upright-button text-gray-600 cursor-pointer" onclick="retrieve()">Retrieve</span>
+<span id="retrieve" class="upright-button-3 text-gray-600 cursor-pointer" onclick=" retrieve()">Retrieve</span>
+<span id="redo" class="upright-button-2 text-gray-600 cursor-pointer" onclick="redo()">Redo</span>
+<span id="undo" class="upright-button-1 text-gray-600 cursor-pointer" onclick="undo()">Undo</span>
+
         </div>
         <button id="formatButton" class="mt-4 px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 focus:outline-none focus:bg-blue-600 ">Format Text</button>
         <div class="relative mt-8">
             <label for="outputText" class="block mb-2 font-medium">Formatted text:</label>
             <textarea id="outputText" class="w-full h-96 px-4 py-2 rounded-md border-gray-300 focus:outline-none focus:border-blue-500 relative" readonly></textarea>
-            <span id="percentageSymbol">Add &#37;</span>
+            <span id="percentageSymbol" class="upright-button-2 text-gray-600 cursor-pointer">Add &#37;</span>
 
-<span id="copyButton" class="upright-button text-gray-600 cursor-pointer">Copy</span>
+<span id="copyButton" class="upright-button-1 text-gray-600 cursor-pointer">Copy</span>
         </div>
     </div>
 
@@ -999,6 +1010,8 @@ function nextNumber(inputText) {
             formattedText = deleteEmpty(formattedText);
             formattedText = sorting(formattedText);
             formattedText = nextNumber(formattedText);
+            formattedText = nextShift(formattedText);
+
 
            document.getElementById('outputText').value = formattedText;
            return formattedText;
@@ -1290,14 +1303,37 @@ document.getElementById('outputText').value = result;
 //localStorage
 document.addEventListener("DOMContentLoaded", function() {
     const inputText = document.getElementById("inputText");
-
-    // Save the inputText value to local storage on every letter entered
+    
     inputText.addEventListener("input", function() {
+    	// Save the inputText value to local storage on every letter entered
         localStorage.setItem("inputText", inputText.value);
+        // save the inputText value to undostack parallely
+        undoStack.push(inputText.value);
     });
 
     
 });
+
+ 	let undoStack=[];
+    let redoStack=[];
+    let lastUndo,lastRedo;
+
+function undo(){
+	if (undoStack.length>0){
+	 //lastvalue is same as present in the textbox so we get last changes in second click
+		lastUndo=undoStack.pop();
+		redoStack.push(lastUndo);
+		inputText.value =lastUndo;
+	}
+}
+
+function redo(){
+	if (redoStack.length>0){ 
+	 lastRedo=redoStack.pop();
+	 undoStack.push(lastRedo);
+	inputText.value =lastRedo;
+	}
+}
 
     // Retrieve and set the value from local storage if it exists
 function retrieve (){
