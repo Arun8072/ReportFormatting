@@ -290,8 +290,6 @@ Next "  "  shift start from :
 </div>
 
     <script>
-
-
 document.addEventListener("DOMContentLoaded", function() {
     const inputText = document.getElementById("inputText");
 
@@ -299,70 +297,70 @@ document.addEventListener("DOMContentLoaded", function() {
         inputText.classList.toggle("fullscreen");
     });
 });
-        //add date 
-        dateFormat(document.getElementById('inputText').value); 
+//add date 
+dateFormat(document.getElementById('inputText').value);
 
-        // Existing functions
-      document.getElementById('formatButton').addEventListener('click', function() {
-            const inputText = document.getElementById('inputText').value;
-                    
-            //1. perform Text Formatting on Input text And Give Output 
-            const formattedOutput = formatText(inputText);
-            //2. preform analysis On Formatted Text And Show On Popup 
-             analyzeText(formattedOutput);
-    
+// Existing functions
+document.getElementById('formatButton').addEventListener('click', function() {
+    const inputText = document.getElementById('inputText').value;
+
+    //1. perform Text Formatting on Input text And Give Output 
+    const formattedOutput = formatText(inputText);
+    //2. preform analysis On Formatted Text And Show On Popup 
+    analyzeText(formattedOutput);
+
 
     document.getElementById('percentageSymbol').addEventListener('click', function() {
-           
-                //3.get formatted Text as After Analysis to Add Percentage To Avoid Numberic Collision
+
+        //3.get formatted Text as After Analysis to Add Percentage To Avoid Numberic Collision
         addPercentage(formattedOutput);
 
-                document.getElementById('percentageSymbol').innerText = 'Added %';
-                setTimeout(function() {
-                    document.getElementById('percentageSymbol').innerText = 'Add %';
-                }, 2000); // Change back to 'Add' after 2 seconds
-         });
-
-    
-      });
+        document.getElementById('percentageSymbol').innerText = 'Added %';
+        setTimeout(function() {
+            document.getElementById('percentageSymbol').innerText = 'Add %';
+        }, 2000); // Change back to 'Add' after 2 seconds
+    });
 
 
-        document.getElementById('copyButton').addEventListener('click', function() {
-            const outputText = document.getElementById('outputText');
-            outputText.select();
-            document.execCommand('copy');
-            document.getElementById('copyButton').innerText = 'Copied';
-            setTimeout(function() {
-                document.getElementById('copyButton').innerText = 'Copy';
-            }, 2000); // Change back to 'Copy' after 2 seconds
-        });
+});
+
+
+document.getElementById('copyButton').addEventListener('click', function() {
+    const outputText = document.getElementById('outputText');
+    outputText.select();
+    document.execCommand('copy');
+    document.getElementById('copyButton').innerText = 'Copied';
+    setTimeout(function() {
+        document.getElementById('copyButton').innerText = 'Copy';
+    }, 2000); // Change back to 'Copy' after 2 seconds
+});
 
 
 
-        document.getElementById('closePopup').addEventListener('click', function() {
-            document.getElementById('popup').style.display = 'none';
-        });
+document.getElementById('closePopup').addEventListener('click', function() {
+    document.getElementById('popup').style.display = 'none';
+});
 
-        function getAllIndices(input, searchStr) {
-            const indices = [];
-            let index = input.toLowerCase().indexOf(searchStr.toLowerCase());
-            while (index !== -1) {
-                indices.push(index);
-                index = input.toLowerCase().indexOf(searchStr.toLowerCase(), index + 1);
-            }
-            return indices;
-        }
+function getAllIndices(input, searchStr) {
+    const indices = [];
+    let index = input.toLowerCase().indexOf(searchStr.toLowerCase());
+    while (index !== -1) {
+        indices.push(index);
+        index = input.toLowerCase().indexOf(searchStr.toLowerCase(), index + 1);
+    }
+    return indices;
+}
 
-        // New functions
-    function splitAlpha(inputText) {
+// New functions
+function splitAlpha(inputText) {
     // Regular expression to match a digit followed by an alphabet character
-     const regex = /(\d)([a-zA-Z])/g;
+    const regex = /(\d)([a-zA-Z])/g;
 
     // Replace each occurrence of a digit followed by an alphabet character with digit + space + alphabet character
-     const formattedText = inputText.replace(regex, '$1 $2');
+    const formattedText = inputText.replace(regex, '$1 $2');
 
-     return formattedText;
-     }
+    return formattedText;
+}
 
 function dateFormat(inputText) {
 
@@ -370,18 +368,18 @@ function dateFormat(inputText) {
     const lines = inputText.split('\n');
 
     const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
-    const weekdays=["Sunday","Monday","Tueday","Wednesday","Thursday","Friday","Saturday"];
+    const weekdays = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
 
     const todayDate = new Date();
     let month = months[todayDate.getMonth()];
     let year = todayDate.getFullYear();
-    let weekday=weekdays[todayDate.getDay()];
+    let weekday = weekdays[todayDate.getDay()];
 
-    lines[2]=`*Date : | ${month} | ${year} |${weekday}*`;
-  
+    lines[2] = `*Date : | ${month} | ${year} |${weekday}*`;
+
     // Join the lines back into a single string
     document.getElementById('inputText').value = lines.join('\n');
-    
+
 }
 
 function nextShift(inputText) {
@@ -391,7 +389,7 @@ function nextShift(inputText) {
 
     const shift = lines[3].split('"');
     const myShift = shift[1];
-    
+
     for (let i = 0; i < lines.length; i++) {
         // Check if the line contains 'scrap details' or 'rework details' in any case
         if (lines[i].toLowerCase().includes('next')) {
@@ -407,7 +405,7 @@ function nextShift(inputText) {
             } else {
                 nextShiftLine[1] = " "; // default
             }
-            
+
             lines[i] = nextShiftLine.join('"');
 
         }
@@ -419,7 +417,7 @@ function nextShift(inputText) {
 }
 
 
-        function wordExtend(inputText) {
+function wordExtend(inputText) {
     const replacements = {
         'qty': 'quantity',
         'ins': 'inspection',
@@ -433,23 +431,23 @@ function nextShift(inputText) {
         'md': 'model',
         'num': 'number',
         'rd': 'reducer',
-        'bos':'bosch',
-        'com':'comstar',
-        'amp':'amphere',
-        'bgs':'bgauss',
-        'mcl':'micelio',
-        'iqb':'iqube',
-        'ovl': 'ovality', 
-        'bl':  'bulge',
+        'bos': 'bosch',
+        'com': 'comstar',
+        'amp': 'amphere',
+        'bgs': 'bgauss',
+        'mcl': 'micelio',
+        'iqb': 'iqube',
+        'ovl': 'ovality',
+        'bl': 'bulge',
         'sn': 'starting number:',
         'en': 'ending number:',
         'thd': 'thin down',
         'ig': 'Interference gap',
         'ctm': 'chattering mark',
-        'stm':'step mark',
-        'grm' : 'grinding mark',
-        'scm' : 'scoring mark',
-        'rdm':'reducer mark',
+        'stm': 'step mark',
+        'grm': 'grinding mark',
+        'scm': 'scoring mark',
+        'rdm': 'reducer mark',
         'pnm': 'punch mark',
         'cast': 'casting defect',
         'vhl': 'valve hole',
@@ -457,61 +455,61 @@ function nextShift(inputText) {
         'dhl': 'dowel hole',
         'us': 'undersize',
         'os': 'oversize',
-        'al':'assembly less',
-        'am' : 'assembly more',
-        'tb':'tap bit broken',
-        'db':'drill bit broken',
-        'unw':'unwash',
+        'al': 'assembly less',
+        'am': 'assembly more',
+        'tb': 'tap bit broken',
+        'db': 'drill bit broken',
+        'unw': 'unwash',
         'dmg': 'damage',
         'lm': 'line mark',
         'tl': 'trim line',
         'en': 'edge nippin',
-        'rm':'rim',
-        'rg':'ring',
+        'rm': 'rim',
+        'rg': 'ring',
         'crk': 'crack',
-        'rs':'rust',
-        'pno':'position not okay',
+        'rs': 'rust',
+        'pno': 'position not okay',
         'fl': 'flange',
         'flv': 'flange variation',
         'flb': 'flange bend',
-        'rmb':'rim bend',
-        'rmd':'rim dent',
-        'rgb':'ring bend',
-        'rgd':'ring dent',
-        'odb':'od bend',
-        'odd':"OD dent",
-        'wl':'weld',
+        'rmb': 'rim bend',
+        'rmd': 'rim dent',
+        'rgb': 'ring bend',
+        'rgd': 'ring dent',
+        'odb': 'od bend',
+        'odd': "OD dent",
+        'wl': 'weld',
         'wlm': 'weld missing',
         'wls': 'weld shift',
-        'wlp':'weld penetration',
+        'wlp': 'weld penetration',
         'wd': 'width',
-        'wdu':"width undersize",
-        'wdo':"width oversize",
-        'wdv':"width variation",
+        'wdu': "width undersize",
+        'wdo': "width oversize",
+        'wdv': "width variation",
         'bc': 'batch code',
         'tm': 'tap missing',
         'dm': 'drill missing',
         'orn': 'orientation',
-        'cbm':'chamber more',
+        'cbm': 'chamber more',
         'rp': 'repaint',
-        'ss':'setting scraps',
+        'ss': 'setting scraps',
         'setting scrap': 'setting scraps',
         'not ok': 'not okay',
         'bn': 'bend',
-        'dn':'dent',
+        'dn': 'dent',
         'btj': "butt joint",
-        'pp':"paint problem",
-        'pg':"pin gauge",
-        'idg':"ID guage",
-        'nga':"no go answering",
-        'gna':"go not answering",
-        'ans':"answering",
-        'tpr':"tapper",
-        'var':"variation",
-        'iu':"ID unwash",
-        'fu':"face unwash",
-        'ra':"roughness",
-        'miss':'missing'
+        'pp': "paint problem",
+        'pg': "pin gauge",
+        'idg': "ID guage",
+        'nga': "no go answering",
+        'gna': "go not answering",
+        'ans': "answering",
+        'tpr': "tapper",
+        'var': "variation",
+        'iu': "ID unwash",
+        'fu': "face unwash",
+        'ra': "roughness",
+        'miss': 'missing'
     };
 
 
@@ -561,9 +559,9 @@ function wordAttach(inputText) {
 }
 
 
-        function addSpacing(inputText) {
+function addSpacing(inputText) {
     // Define special characters
-    const specialCharacters = ['!','*','"', '#', '$', '%', '&', "'", '(', ')', '+', ',', '-', '.', '/', ':', ';', '<', '=', '>', '?', '@', '[', '\\', ']', '^', '_', '{', '|', '}', '~'];
+    const specialCharacters = ['!', '*', '"', '#', '$', '%', '&', "'", '(', ')', '+', ',', '-', '.', '/', ':', ';', '<', '=', '>', '?', '@', '[', '\\', ']', '^', '_', '{', '|', '}', '~'];
 
     // Split the input text into an array of characters
     const characters = inputText.split('');
@@ -590,7 +588,7 @@ function wordAttach(inputText) {
     return formattedText;
 }
 
-        function lineCapitalize(inputText) {
+function lineCapitalize(inputText) {
     // Split the input text into an array of lines
     const lines = inputText.split('\n');
 
@@ -605,7 +603,7 @@ function wordAttach(inputText) {
             const firstAlphabetIndex = trimmedLine.search(/[a-zA-Z]/);
 
             // Check if the first alphabet letter is not already capitalized
-            if (firstAlphabetIndex !== -1 ) {
+            if (firstAlphabetIndex !== -1) {
                 // Capitalize the first alphabet letter
                 const firstLetter = trimmedLine[firstAlphabetIndex].toUpperCase();
                 // Make the remaining letters lowercase
@@ -620,9 +618,10 @@ function wordAttach(inputText) {
     const formattedText = lines.join('\n');
     return formattedText;
 }
-        function alterCase(inputText) {
+
+function alterCase(inputText) {
     const keywords = [
-        'id', 'od', 'cnc', 'vmc','msd', 'emf', 'bosch','sona','comstar', 'amphere', 'bgauss', 'micelio','machileo','lucas','tvs', 'u546','iqube','ppap'
+        'id', 'od', 'cnc', 'vmc', 'msd', 'emf', 'bosch', 'sona', 'comstar', 'amphere', 'bgauss', 'micelio', 'machileo', 'lucas', 'tvs', 'u546', 'iqube', 'ppap'
     ];
 
     // Split the input text into an array of lines
@@ -651,7 +650,7 @@ function wordAttach(inputText) {
     return formattedText;
 }
 
-        function shiftCapitalize(inputText) {
+function shiftCapitalize(inputText) {
     // Split the input text into an array of lines
     const lines = inputText.split('\n');
 
@@ -679,7 +678,8 @@ function wordAttach(inputText) {
     const formattedText = lines.join('\n');
     return formattedText;
 }
-        function addNos(inputText) {
+
+function addNos(inputText) {
     // Split the input text into an array of lines
     const lines = inputText.split('\n');
 
@@ -704,7 +704,7 @@ function wordAttach(inputText) {
 }
 
 
-        function addNil(inputText) {
+function addNil(inputText) {
     // Split the input text into an array of lines
     const lines = inputText.split('\n');
 
@@ -731,14 +731,14 @@ function wordAttach(inputText) {
 }
 
 
-        function doubleDigit(inputText) {
+function doubleDigit(inputText) {
     // Replace single digits with double digits using regular expression
     const formattedText = inputText.replace(/\b(\d)\b/g, '0$1');
 
     return formattedText;
 }
 
-        function removeIndent(inputText) {
+function removeIndent(inputText) {
     // Split the input text into an array of lines
     const lines = inputText.split('\n');
 
@@ -755,7 +755,8 @@ function wordAttach(inputText) {
     const formattedText = lines.join('\n');
     return formattedText;
 }
-        function addBulletin(inputText) {
+
+function addBulletin(inputText) {
     // Split the input text into an array of lines
     const lines = inputText.split('\n');
 
@@ -791,7 +792,7 @@ function wordAttach(inputText) {
     return formattedText;
 }
 
-        function addStar(inputText) {
+function addStar(inputText) {
     // Split the input text into an array of lines
     const lines = inputText.split('\n');
 
@@ -811,8 +812,8 @@ function wordAttach(inputText) {
             }
 
         }
-                // Remove whitespace around '*' if already present in the line
-            lines[i] = lines[i].replace(/\s*\*\s*/g, '*');
+        // Remove whitespace around '*' if already present in the line
+        lines[i] = lines[i].replace(/\s*\*\s*/g, '*');
     }
 
     // Join the lines back into a single string
@@ -820,7 +821,7 @@ function wordAttach(inputText) {
     return formattedText;
 }
 
-        function removeDuplicate(inputText) {
+function removeDuplicate(inputText) {
     // Split the input text into an array of lines
     const lines = inputText.split('\n');
 
@@ -847,62 +848,64 @@ function wordAttach(inputText) {
     return formattedText;
 }
 
-        function getNumber(input){
-             var numberMatch = input.match(/(\d+)/);                                                         
-            if (numberMatch) {
-                return parseInt(numberMatch[0]);                                                                            
-            }else { return 0 ; }
+function getNumber(input) {
+    var numberMatch = input.match(/(\d+)/);
+    if (numberMatch) {
+        return parseInt(numberMatch[0]);
+    } else {
+        return 0;
+    }
+}
+
+function sorting(inputText) {
+
+    // Look for the line containing "total {component} quantity" or "{component} details"
+
+    const lines = inputText.split('\n');
+    let swapped = [];
+    var found = false;
+
+    //finding the starting index and ending index of the section to sort in an array
+    for (let i = 0; i < lines.length; i++) {
+
+        //sorting occurs for scrap and rework
+        if ((lines[i].toLowerCase().includes('scrap') || lines[i].toLowerCase().includes('rework')) && lines[i].toLowerCase().includes('details')) {
+            var startIndex = i;
+            var endIndex = lines.indexOf('', startIndex);
+            found = true; //to make sort occurs only within the section 
         }
 
-        function sorting(inputText) {
-        
-                    // Look for the line containing "total {component} quantity" or "{component} details"
-                   
-                    const lines = inputText.split('\n');
-                    let  swapped = [];
-                    var found = false;
+        //sorting  in ascending order                      
+        if (found === true && startIndex < i && i < endIndex && !lines[i] == '' && !lines[i + 1] == '') {
 
-                   //finding the starting index and ending index of the section to sort in an array
-                    for (let i = 0; i < lines.length; i++) {
+            if (getNumber(lines[i]) > getNumber(lines[i + 1])) {
+                var temp = lines[i];
+                lines[i] = lines[i + 1];
+                lines[i + 1] = temp;
+                swapped.push(1); //to know swap occurs
+            }
 
-                        //sorting occurs for scrap and rework
-                        if ( (lines[i].toLowerCase().includes('scrap') || lines[i].toLowerCase().includes('rework') ) && lines[i].toLowerCase().includes('details')) {
-                           var startIndex=i;                         
-                           var endIndex=lines.indexOf('',startIndex);                          
-                            found = true; //to make sort occurs only within the section 
-                        }
-
-                        //sorting  in ascending order                      
-                         if (found===true && startIndex<i && i<endIndex &&  !lines[i]=='' &&  !lines[i+1]=='' ){               
-                            
-                            if (getNumber(lines[i])>getNumber(lines[i+1])){                                              
-                            var temp = lines[i];
-                            lines[i] = lines[i+1];
-                            lines[i+1] = temp;                           
-                            swapped.push(1); //to know swap occurs
-                           }
-                            
-                         } 
-                         
-
-                         // if swapped occurs there is 1 in swapped array so until (array full of 0) swapping doesnt occurs do sorting
-                         // if swapped array includes 1 move the pointer to starting line of the section to re do sort
-                         if (endIndex<=i){
-                            found =false;                        
-                             if (swapped.includes(1) ){                                 
-                              i=startIndex-1 ;
-                                swapped=[];                     
-                             }
-                         }              
-
-                    }//for
- 
-               
-
-                    // Join the lines back into a single string
-                    const formattedText = lines.join('\n');
-                    return formattedText;
         }
+
+
+        // if swapped occurs there is 1 in swapped array so until (array full of 0) swapping doesnt occurs do sorting
+        // if swapped array includes 1 move the pointer to starting line of the section to re do sort
+        if (endIndex <= i) {
+            found = false;
+            if (swapped.includes(1)) {
+                i = startIndex - 1;
+                swapped = [];
+            }
+        }
+
+    } //for
+
+
+
+    // Join the lines back into a single string
+    const formattedText = lines.join('\n');
+    return formattedText;
+}
 
 function highlightNote(inputText) {
     // Split the input text into an array of lines
@@ -914,10 +917,10 @@ function highlightNote(inputText) {
         if (lines[i].toLowerCase().includes('note') || lines[i].toLowerCase().includes('notes')) {
 
 
-                    lines[i]=lines[i].trim();
-                    lines[i] = "```"+lines[i]+"```";
-                
-            
+            lines[i] = lines[i].trim();
+            lines[i] = "```" + lines[i] + "```";
+
+
         }
     }
 
@@ -928,25 +931,25 @@ function highlightNote(inputText) {
 
 
 function deleteEmpty(inputText) {
-    
+
     // Split the input text into an array of lines
     let lines = inputText.split('\n\n');
 
     // Iterate through each line
     for (let i = 0; i < lines.length; i++) {
-            
-     if ( lines[i].match(new RegExp(`delete`, 'ig')) || !getNumber(lines[i])) {
-                //remove element from the array
-                var currentIndex=lines.indexOf(lines[i]);
-                lines.splice(currentIndex, 1);
-                // after deleting element from the array , 
-                //the current element moves left/backside to loop pointer ,
-                //it makes the element escapes from the loop,
-                //so move the loop pointer one step back
-                --i;
-        }//if 
 
-    }//for
+        if (lines[i].match(new RegExp(`delete`, 'ig')) || !getNumber(lines[i])) {
+            //remove element from the array
+            var currentIndex = lines.indexOf(lines[i]);
+            lines.splice(currentIndex, 1);
+            // after deleting element from the array , 
+            //the current element moves left/backside to loop pointer ,
+            //it makes the element escapes from the loop,
+            //so move the loop pointer one step back
+            --i;
+        } //if 
+
+    } //for
 
     // Join the lines back into a single string
     const formattedText = lines.join('\n\n');
@@ -987,37 +990,37 @@ function nextNumber(inputText) {
     return formattedText;
 }
 
-        function formatText(inputText) {
-            // Integrate new formatting functions
-            let formattedText ='';
+function formatText(inputText) {
+    // Integrate new formatting functions
+    let formattedText = '';
 
-            formattedText = nextShift(inputText);
-            formattedText = splitAlpha(formattedText);
-            formattedText = wordExtend(formattedText);
-            formattedText = wordAttach(formattedText);
-            formattedText = addSpacing(formattedText);
-            formattedText = lineCapitalize(formattedText);
-            formattedText = alterCase(formattedText);
-            formattedText = shiftCapitalize(formattedText);
-            formattedText = addNos(formattedText);
-            formattedText = addNil(formattedText);
-            formattedText = doubleDigit(formattedText);
-            formattedText = removeIndent(formattedText);
-            formattedText = addBulletin(formattedText);
-            formattedText = addStar(formattedText);
-            formattedText = removeDuplicate(formattedText);
-            formattedText = highlightNote(formattedText);
-            formattedText = deleteEmpty(formattedText);
-            formattedText = sorting(formattedText);
-            formattedText = nextNumber(formattedText);
-            formattedText = nextShift(formattedText);
+    formattedText = nextShift(inputText);
+    formattedText = splitAlpha(formattedText);
+    formattedText = wordExtend(formattedText);
+    formattedText = wordAttach(formattedText);
+    formattedText = addSpacing(formattedText);
+    formattedText = lineCapitalize(formattedText);
+    formattedText = alterCase(formattedText);
+    formattedText = shiftCapitalize(formattedText);
+    formattedText = addNos(formattedText);
+    formattedText = addNil(formattedText);
+    formattedText = doubleDigit(formattedText);
+    formattedText = removeIndent(formattedText);
+    formattedText = addBulletin(formattedText);
+    formattedText = addStar(formattedText);
+    formattedText = removeDuplicate(formattedText);
+    formattedText = highlightNote(formattedText);
+    formattedText = deleteEmpty(formattedText);
+    formattedText = sorting(formattedText);
+    formattedText = nextNumber(formattedText);
+    formattedText = nextShift(formattedText);
 
 
-           document.getElementById('outputText').value = formattedText;
-           return formattedText;
-        }
+    document.getElementById('outputText').value = formattedText;
+    return formattedText;
+}
 
-        function analyzeText(inputText) {
+function analyzeText(inputText) {
     let output = '';
 
     // Analyze scrap and rework components
@@ -1025,16 +1028,16 @@ function nextNumber(inputText) {
     output += '<br>' + "Rework Analysis<br>" + analyzeComponent(inputText, 'rework');
 
     // Analyze comstar numbering details
-    output += '<br>' +"Comstar Numbering Analysis" +analyzeComstarNumbering(inputText);
+    output += '<br>' + "Comstar Numbering Analysis" + analyzeComstarNumbering(inputText);
 
     // Analyze inspection details
-    output += '<br>'+"Inspection Analysis" + analyzeInspection(inputText);
+    output += '<br>' + "Inspection Analysis" + analyzeInspection(inputText);
 
     document.getElementById('validationResults').innerHTML = output;
     document.getElementById('popup').style.display = 'block';
 }
 
-        function analyzeInspection(inputText) {
+function analyzeInspection(inputText) {
     let result = '';
 
     // Find all occurrences of "inspection"
@@ -1062,7 +1065,7 @@ function nextNumber(inputText) {
 
         // Extract and analyze inspection details
         const inspectionDetails = inspectionText.substring(detailsIndex, detailsEndIndex);
-        
+
         // Find total ok, total runout, total scrap, total rework, and total inspection values
         const total_ok = getNumberFromLine(inspectionDetails, 'total', 'ok');
         const total_runout = getNumberFromLine(inspectionDetails, 'total', 'runout');
@@ -1085,80 +1088,80 @@ function nextNumber(inputText) {
 }
 
 
-        function analyzeComponent(inputText, component) {
-            // Find all occurrences of "Model"
-            const modelIndices = getAllIndices(inputText.toLowerCase(), 'model');
+function analyzeComponent(inputText, component) {
+    // Find all occurrences of "Model"
+    const modelIndices = getAllIndices(inputText.toLowerCase(), 'model');
 
-            let result = '';
+    let result = '';
 
-            // Analyze component for each model
-            for (let i = 0; i < modelIndices.length; i++) {
-                const modelIndex = modelIndices[i];
-                const nextModelIndex = (i + 1 < modelIndices.length) ? modelIndices[i + 1] : inputText.length;
-                const modelText = inputText.substring(modelIndex, nextModelIndex);
- 
-                // Find the "Total {component} quantity" line
-                let totalQty;
-                let totalQtyLine = modelText.match(new RegExp(`total\\s${component}\\squantity\\s-\\s(\\d+)`, 'i'));
-                if (totalQtyLine) {
-                    totalQty = parseInt(totalQtyLine[1]);
-                } else {
-                    // Look for the line containing "total {component} quantity" or "{component} details"
-                    const lines = modelText.split('\n');
-                    for (const line of lines) {
-                        if (line.toLowerCase().includes('total') && line.toLowerCase().includes(component) && line.toLowerCase().includes('quantity')) {
-                            const qtyMatch = line.match(/(\d+)/);
-                            if (qtyMatch) {
-                                totalQty = parseInt(qtyMatch[1]);
-                                break;
-                            }
-                        }
+    // Analyze component for each model
+    for (let i = 0; i < modelIndices.length; i++) {
+        const modelIndex = modelIndices[i];
+        const nextModelIndex = (i + 1 < modelIndices.length) ? modelIndices[i + 1] : inputText.length;
+        const modelText = inputText.substring(modelIndex, nextModelIndex);
+
+        // Find the "Total {component} quantity" line
+        let totalQty;
+        let totalQtyLine = modelText.match(new RegExp(`total\\s${component}\\squantity\\s-\\s(\\d+)`, 'i'));
+        if (totalQtyLine) {
+            totalQty = parseInt(totalQtyLine[1]);
+        } else {
+            // Look for the line containing "total {component} quantity" or "{component} details"
+            const lines = modelText.split('\n');
+            for (const line of lines) {
+                if (line.toLowerCase().includes('total') && line.toLowerCase().includes(component) && line.toLowerCase().includes('quantity')) {
+                    const qtyMatch = line.match(/(\d+)/);
+                    if (qtyMatch) {
+                        totalQty = parseInt(qtyMatch[1]);
+                        break;
                     }
                 }
-
-                if (!totalQty) {
-                    result += `${component} ${i + 1}: No ${component}\n<br>`;
-                    continue; // Skip this model if total quantity is not found
-                }
-
-                // Find the "{Component} details" section and extract quantities
-                const detailsIndex = modelText.toLowerCase().indexOf(`${component} details`);
-                if (detailsIndex === -1) {
-                    result += `${component} ${i + 1}: <span class="warning" >Validation failed - ${component} details section not found.\n</span><br>`;
-                    continue; // Skip this model if "{Component} details" section is not found
-                }
-                const detailsEndIndex = modelText.indexOf('\n\n', detailsIndex);
-                if (detailsEndIndex === -1) {
-                    result += `${component} ${i + 1}: <span class="warning" >Validation failed - End of ${component} details section not found.\n</span><br>`;
-                    continue; // Skip this model if end of "{Component} details" section is not found
-                }
-                const detailsSection = modelText.substring(detailsIndex, detailsEndIndex);
-                
-                const qtyMatches = detailsSection.match(/(\d+)/gm);
-
-                
-                if (!qtyMatches) {
-                    result += `${component} ${i + 1}: <span class="warning" >Validation failed - No quantities found in ${component} details section.\n</span><br>`;
-                    continue; // Skip this model if no quantities are found in "{Component} details" section
-                }
-                const foundQty = qtyMatches.reduce((sum, match) => {
-                    const qty = parseInt(match.match(/(\d+)/)[1]);
-                    return sum + qty;
-                }, 0);
-
-                // Compare found quantity with expected quantity
-                if (foundQty === totalQty) {
-                    result += `${component} ${i + 1}: <span class="success"> validation success</span><br>Total ${component} quantity - ${totalQty} <br>${component} details - ${foundQty} \n<br>`;
-                } else {
-                    result += `${component} ${i + 1}: <span class="failure"> validation failed</span> <br>Total ${component} quantity - ${totalQty} <br>${component} details - ${foundQty} \n<br>`;
-                }
             }
-
-            return result.trim();
         }
 
+        if (!totalQty) {
+            result += `${component} ${i + 1}: No ${component}\n<br>`;
+            continue; // Skip this model if total quantity is not found
+        }
 
-    function analyzeComstarNumbering(inputText) {
+        // Find the "{Component} details" section and extract quantities
+        const detailsIndex = modelText.toLowerCase().indexOf(`${component} details`);
+        if (detailsIndex === -1) {
+            result += `${component} ${i + 1}: <span class="warning" >Validation failed - ${component} details section not found.\n</span><br>`;
+            continue; // Skip this model if "{Component} details" section is not found
+        }
+        const detailsEndIndex = modelText.indexOf('\n\n', detailsIndex);
+        if (detailsEndIndex === -1) {
+            result += `${component} ${i + 1}: <span class="warning" >Validation failed - End of ${component} details section not found.\n</span><br>`;
+            continue; // Skip this model if end of "{Component} details" section is not found
+        }
+        const detailsSection = modelText.substring(detailsIndex, detailsEndIndex);
+
+        const qtyMatches = detailsSection.match(/(\d+)/gm);
+
+
+        if (!qtyMatches) {
+            result += `${component} ${i + 1}: <span class="warning" >Validation failed - No quantities found in ${component} details section.\n</span><br>`;
+            continue; // Skip this model if no quantities are found in "{Component} details" section
+        }
+        const foundQty = qtyMatches.reduce((sum, match) => {
+            const qty = parseInt(match.match(/(\d+)/)[1]);
+            return sum + qty;
+        }, 0);
+
+        // Compare found quantity with expected quantity
+        if (foundQty === totalQty) {
+            result += `${component} ${i + 1}: <span class="success"> validation success</span><br>Total ${component} quantity - ${totalQty} <br>${component} details - ${foundQty} \n<br>`;
+        } else {
+            result += `${component} ${i + 1}: <span class="failure"> validation failed</span> <br>Total ${component} quantity - ${totalQty} <br>${component} details - ${foundQty} \n<br>`;
+        }
+    }
+
+    return result.trim();
+}
+
+
+function analyzeComstarNumbering(inputText) {
     // -> split into sections
     // -> finding numbering section 
     // -> for all numbering sections 
@@ -1170,81 +1173,81 @@ function nextNumber(inputText) {
     var section_array = inputText.split('\n\n'); //splitted as section
     let result = '';
 
-    for (let i = (section_array.length-1); i >= 0; i--) { 
+    for (let i = (section_array.length - 1); i >= 0; i--) {
 
-                var section = section_array[i].toLowerCase();
-                if (section.includes('numbering') && section.includes('details*')) {
-                    //finding the modal name of numbering details
-                    var line_array = section.trim().split('\n');
-                    var words_array=line_array[0].split(' ');
-                    let letter_array=words_array[0].split('');
-                    letter_array.shift(); //removing star symbol
-                    modal_found= letter_array.join("");
+        var section = section_array[i].toLowerCase();
+        if (section.includes('numbering') && section.includes('details*')) {
+            //finding the modal name of numbering details
+            var line_array = section.trim().split('\n');
+            var words_array = line_array[0].split(' ');
+            let letter_array = words_array[0].split('');
+            letter_array.shift(); //removing star symbol
+            modal_found = letter_array.join("");
 
-    let startingNumber = getNumberFromLine(section, 'starting', 'number');
-    let endingNumber = getNumberFromLine(section, 'ending', 'number');
-    let okQuantityMatch = findOkQuantityInFinal(inputText,modal_found);
+            let startingNumber = getNumberFromLine(section, 'starting', 'number');
+            let endingNumber = getNumberFromLine(section, 'ending', 'number');
+            let okQuantityMatch = findOkQuantityInFinal(inputText, modal_found);
 
-    if (startingNumber && endingNumber) {
-        let difference = endingNumber - startingNumber;
-        if (okQuantityMatch !== null && difference === okQuantityMatch) {
-            result += `<p> ${modal_found} : <span class="success">validation success</span> <br> Total Ok quantity: ${okQuantityMatch} ; Difference: ${difference}</p>`;
-        } else {
-            result += `<p> ${modal_found} : <span class="failure">validation failed</span> <br> Total Ok quantity: ${okQuantityMatch} ; Difference: ${difference}</p>`;
-        }
-    } else {
-        result += `<p> ${modal_found} : Starting or ending number not found</p>`;
-    }
+            if (startingNumber && endingNumber) {
+                let difference = endingNumber - startingNumber;
+                if (okQuantityMatch !== null && difference === okQuantityMatch) {
+                    result += `<p> ${modal_found} : <span class="success">validation success</span> <br> Total Ok quantity: ${okQuantityMatch} ; Difference: ${difference}</p>`;
+                } else {
+                    result += `<p> ${modal_found} : <span class="failure">validation failed</span> <br> Total Ok quantity: ${okQuantityMatch} ; Difference: ${difference}</p>`;
+                }
+            } else {
+                result += `<p> ${modal_found} : Starting or ending number not found</p>`;
+            }
 
-             }//if
-    }//for
-     //result +="<br>";
+        } //if
+    } //for
+    //result +="<br>";
     return result;
 }
 
-        function findOkQuantityInFinal(inputText,modal_found) {
-            const lines = inputText.split('\n');
-            let startSearch = false;
+function findOkQuantityInFinal(inputText, modal_found) {
+    const lines = inputText.split('\n');
+    let startSearch = false;
 
-            for (let i = 0; i < lines.length; i++) {
-                const line = lines[i].toLowerCase();
-                if (line.includes('final') && line.includes(modal_found)) {
-                    startSearch = true;
-                    continue;
-                }
-
-                if (startSearch && line.includes('total') && line.includes('ok')) {
-                    const numberMatch = line.match(/(\d+)/);
-                    if (numberMatch) {
-                        return parseInt(numberMatch[1]);
-                    }
-                }
-            }
-
-            return null;
+    for (let i = 0; i < lines.length; i++) {
+        const line = lines[i].toLowerCase();
+        if (line.includes('final') && line.includes(modal_found)) {
+            startSearch = true;
+            continue;
         }
 
-        function getNumberFromLine(inputText, word1, word2) {
-            const lines = inputText.split('\n');
-            for (const line of lines) {
-                if (line.toLowerCase().includes(word1) && line.toLowerCase().includes(word2)) {
-                    const numberMatch = line.match(/(\d+)/);
-                    if (numberMatch) {
-                        return parseInt(numberMatch[1]);
-                    }
-                }
+        if (startSearch && line.includes('total') && line.includes('ok')) {
+            const numberMatch = line.match(/(\d+)/);
+            if (numberMatch) {
+                return parseInt(numberMatch[1]);
             }
-            return null;
         }
+    }
 
-
-        function calcPercentage(x, y) {
-  const percent = (x / y) * 100
-  return percent.toFixed(2) ;
+    return null;
 }
 
-        function addPercentage(formattedText) {
-        
+function getNumberFromLine(inputText, word1, word2) {
+    const lines = inputText.split('\n');
+    for (const line of lines) {
+        if (line.toLowerCase().includes(word1) && line.toLowerCase().includes(word2)) {
+            const numberMatch = line.match(/(\d+)/);
+            if (numberMatch) {
+                return parseInt(numberMatch[1]);
+            }
+        }
+    }
+    return null;
+}
+
+
+function calcPercentage(x, y) {
+    const percent = (x / y) * 100
+    return percent.toFixed(2);
+}
+
+function addPercentage(formattedText) {
+
     // Split the formatted text into an array of lines
     const lines = formattedText.split('\n');
 
@@ -1280,11 +1283,11 @@ function nextNumber(inputText) {
                 if (quantity !== null) {
                     const percentage = calcPercentage(quantity, total_inspection);
                     //add percentage only if It Is Numberic Because if Inspection Is Zero Percentage Becomes Infinity
-                  if(isFinite(percentage)){
-                      
-                      lines[j] = lines[j].replace('-', `(${percentage}%) -`);
-                  }
-                    
+                    if (isFinite(percentage)) {
+
+                        lines[j] = lines[j].replace('-', `(${percentage}%) -`);
+                    }
+
                 }
             }
 
@@ -1295,122 +1298,121 @@ function nextNumber(inputText) {
 
     // Join the lines back into a single string
     const result = lines.join('\n');
-    
-document.getElementById('outputText').value = result;
+
+    document.getElementById('outputText').value = result;
     return result;
 }
 
 //localStorage
 document.addEventListener("DOMContentLoaded", function() {
     const inputText = document.getElementById("inputText");
-    
+
     inputText.addEventListener("input", function() {
-    	// Save the inputText value to local storage on every letter entered
+        // Save the inputText value to local storage on every letter entered
         localStorage.setItem("inputText", inputText.value);
         // save the inputText value to undostack parallely
         undoStack.push(inputText.value);
     });
 
-    
+
 });
 
- 	let undoStack=[];
-    let redoStack=[];
-    let lastUndo,lastRedo;
+let undoStack = [];
+let redoStack = [];
+let lastUndo, lastRedo;
 
-function undo(){
-	if (undoStack.length>0){
-	 //lastvalue is same as present in the textbox so we get last changes in second click
-		lastUndo=undoStack.pop();
-		redoStack.push(lastUndo);
-		inputText.value =lastUndo;
-	}
+function undo() {
+    if (undoStack.length > 0) {
+        //lastvalue is same as present in the textbox so we get last changes in second click
+        lastUndo = undoStack.pop();
+        redoStack.push(lastUndo);
+        inputText.value = lastUndo;
+    }
 }
 
-function redo(){
-	if (redoStack.length>0){ 
-	 lastRedo=redoStack.pop();
-	 undoStack.push(lastRedo);
-	inputText.value =lastRedo;
-	}
+function redo() {
+    if (redoStack.length > 0) {
+        lastRedo = redoStack.pop();
+        undoStack.push(lastRedo);
+        inputText.value = lastRedo;
+    }
 }
 
-    // Retrieve and set the value from local storage if it exists
-function retrieve (){
+// Retrieve and set the value from local storage if it exists
+function retrieve() {
     if (localStorage.getItem("inputText")) {
         inputText.value = localStorage.getItem("inputText");
     }
 }
 
 function calculation() {
-    
-     // Get the input field element
-     const inputField = document.getElementById('inputText');
-     // Get the toast element
-     const toast = document.getElementById('toast');
+
+    // Get the input field element
+    const inputField = document.getElementById('inputText');
+    // Get the toast element
+    const toast = document.getElementById('toast');
 
     // Add an event listener to the input field for the "keyup" event
     inputField.addEventListener('keyup', function(event) {
 
-         // Get the value of the input field
-      const inputValue = inputField.value;
+        // Get the value of the input field
+        const inputValue = inputField.value;
 
         //if (event.key === '=') - this event is not detected in mobile so used this alternative match function 
 
-      // Check if the input value has two equal signs
-      const hasEqualSigns = inputValue.match(/=.*?=/) !== null;
+        // Check if the input value has two equal signs
+        const hasEqualSigns = inputValue.match(/=.*?=/) !== null;
 
-      if (hasEqualSigns) {
-        // Get the value of the input field
-       // const inputValue = inputField.value;
-        // Find the first and last occurrences of the equal sign (=)
-        const firstEqualIndex = inputValue.indexOf('=');
-        const lastEqualIndex = inputValue.lastIndexOf('=');
-        // Check if there are two equal signs in the input value
-        if (firstEqualIndex !== -1 && lastEqualIndex !== -1 && firstEqualIndex !== lastEqualIndex) {
-          // Get the value between the two equal signs
-          const expression = inputValue.slice(firstEqualIndex + 1, lastEqualIndex);
-          // Extracts numbers and symbols from the expression
-          const numbersAndSymbols = expression.match(/\d+|\+|-+/g);
-          // Solves the expression
-          let result = parseFloat(numbersAndSymbols[0]);
-          for (let i = 1; i < numbersAndSymbols.length; i += 2) {
-            const operator = numbersAndSymbols[i];
-            const operand = parseFloat(numbersAndSymbols[i + 1]);
-            switch (operator) {
-              case '+':
-                result += operand;
-                break;
-              case '-':
-                result -= operand;
-                break;
+        if (hasEqualSigns) {
+            // Get the value of the input field
+            // const inputValue = inputField.value;
+            // Find the first and last occurrences of the equal sign (=)
+            const firstEqualIndex = inputValue.indexOf('=');
+            const lastEqualIndex = inputValue.lastIndexOf('=');
+            // Check if there are two equal signs in the input value
+            if (firstEqualIndex !== -1 && lastEqualIndex !== -1 && firstEqualIndex !== lastEqualIndex) {
+                // Get the value between the two equal signs
+                const expression = inputValue.slice(firstEqualIndex + 1, lastEqualIndex);
+                // Extracts numbers and symbols from the expression
+                const numbersAndSymbols = expression.match(/\d+|\+|-+/g);
+                // Solves the expression
+                let result = parseFloat(numbersAndSymbols[0]);
+                for (let i = 1; i < numbersAndSymbols.length; i += 2) {
+                    const operator = numbersAndSymbols[i];
+                    const operand = parseFloat(numbersAndSymbols[i + 1]);
+                    switch (operator) {
+                        case '+':
+                            result += operand;
+                            break;
+                        case '-':
+                            result -= operand;
+                            break;
+                    }
+                }
+
+                // Show the result in the toast
+                toast.textContent = `Result: ${result}`;
+                toast.className = 'show';
+
+                // Removes the toast after 3 seconds
+                setTimeout(function() {
+                    toast.className = toast.className.replace('show', '');
+                }, 4000);
+
+                // Replace the expression with the result
+                // const newValue = `${result}`;
+
+                //remove expresion from output
+                const newValue = '';
+
+                document.getElementById('outputText').value = inputValue.replace(inputValue.slice(firstEqualIndex, lastEqualIndex + 1), newValue);
+
             }
-          }
-
-          // Show the result in the toast
-          toast.textContent = `Result: ${result}`;
-          toast.className = 'show';
-
-          // Removes the toast after 3 seconds
-          setTimeout(function() {
-            toast.className = toast.className.replace('show', '');
-          }, 4000);
-
-          // Replace the expression with the result
-          // const newValue = `${result}`;
-
-          //remove expresion from output
-          const newValue = '';
-
-          document.getElementById('outputText').value = inputValue.replace(inputValue.slice(firstEqualIndex, lastEqualIndex + 1), newValue);
-          
         }
-      }
-    }); 
+    });
 
-   }//calc
-   calculation();
-
+} //calc
+calculation();
  </script>
 </body>
 </html>
