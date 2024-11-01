@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Text Formatting Tool</title>
+    <title>Report Formatting Tool</title>
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
     <style>
         /* Custom styles */
@@ -151,7 +151,7 @@
 </head>
 <body class="bg-gray-100">
     <div class="container mx-auto p-6">
-        <h3 class="text-2xl font-bold mb-6">Text Formatting Tool</h3>
+        <h3 class="text-2xl font-bold mb-6">Report Formatting Tool</h3>
         <div class="relative">
             <label for="inputText" class="block mb-2 font-medium">Add your content:</label>
             <textarea id="inputText" class="w-full h-40 px-4 py-2 rounded-md border-gray-300 focus:outline-none focus:border-blue-500">
@@ -374,8 +374,9 @@ function dateFormat(inputText) {
     let month = months[todayDate.getMonth()];
     let year = todayDate.getFullYear();
     let weekday = weekdays[todayDate.getDay()];
-
-    lines[2] = `*Date : | ${month} | ${year} |${weekday}*`;
+	let today= todayDate.getDate();
+    //lines[2] = `*Date : | ${month} | ${year} *`;
+    lines[2] = `*Date : ${today} | ${month} | ${year} | ${weekday}*`;
 
     // Join the lines back into a single string
     document.getElementById('inputText').value = lines.join('\n');
@@ -472,6 +473,7 @@ function wordExtend(inputText) {
         'fl': 'flange',
         'flv': 'flange variation',
         'flb': 'flange bend',
+        'flm':'flange more',
         'rmb': 'rim bend',
         'rmd': 'rim dent',
         'rgb': 'ring bend',
@@ -1369,7 +1371,7 @@ function calculation() {
             // Find the first and last occurrences of the equal sign (=)
             const firstEqualIndex = inputValue.indexOf('=');
             const lastEqualIndex = inputValue.lastIndexOf('=');
-            // Check if there are two equal signs in the input value
+            // Check if there are two equal sig ns in the input value
             if (firstEqualIndex !== -1 && lastEqualIndex !== -1 && firstEqualIndex !== lastEqualIndex) {
                 // Get the value between the two equal signs
                 const expression = inputValue.slice(firstEqualIndex + 1, lastEqualIndex);
